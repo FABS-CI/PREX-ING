@@ -6,6 +6,6 @@
 
 ## Dépenses, Stock et Rapports
 - [x] Importer les neuf fichiers à l’identique et supprimer l’archive.
-- [ ] Appliquer le SQL fourni à l’identique et vérifier le stockage des reçus.
-- [ ] Vérifier les 30 tests et l’absence d’erreurs signalées.
-- [ ] Enregistrer une dépense en espèces de 2 500 FCFA et vérifier la baisse de caisse.
+- [x] Appliquer le SQL fourni à l’identique et vérifier le stockage des reçus.
+- [x] Vérifier les 30 tests et l’absence d’erreurs signalées.
+- [x] Enregistrer une dépense en espèces de 2 500 FCFA et vérifier la baisse de caisse de 5 000 à 2 500 FCFA.
