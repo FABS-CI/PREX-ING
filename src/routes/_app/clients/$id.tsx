@@ -4,6 +4,7 @@ import { ArrowLeft, MessageCircle, Pencil, Phone, Plus, Trash2 } from "lucide-re
 import { toast } from "sonner";
 
 import { ClientDialog } from "@/components/clients/ClientForm";
+import { DialogueAbonnement } from "@/components/clients/DialogueAbonnement";
 import {
   BadgeStatutDepot,
   BadgeStatutPaiement,
@@ -79,6 +80,7 @@ function FicheClient() {
   const supprimer = useSupprimerClient();
   const [edition, setEdition] = useState(false);
   const [confirmation, setConfirmation] = useState(false);
+  const [abonner, setAbonner] = useState(false);
 
   if (isLoading) return <Chargement />;
   if (error)
@@ -284,12 +286,12 @@ function FicheClient() {
         </TabsContent>
 
         <TabsContent value="abonnements">
+          <Button className="mb-3" variant="outline" onClick={() => setAbonner(true)}>
+            <Plus />
+            Souscrire un abonnement
+          </Button>
           {abonnements.data?.length === 0 ? (
-            <EtatVide
-              icone={Repeat}
-              titre="Aucun abonnement"
-              texte="Les abonnements clients arrivent avec le module « Modes avancés »."
-            />
+            <EtatVide icone={Repeat} titre="Aucun abonnement" />
           ) : null}
           {abonnements.data && abonnements.data.length > 0 ? (
             <ul className="divide-y overflow-hidden rounded-2xl border bg-card">
@@ -327,6 +329,10 @@ function FicheClient() {
           </div>
         </TabsContent>
       </Tabs>
+
+      {abonner ? (
+        <DialogueAbonnement clientId={c.id} clientNom={c.nom} onFermer={() => setAbonner(false)} />
+      ) : null}
 
       <ClientDialog
         ouvert={edition}

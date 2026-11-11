@@ -2,6 +2,7 @@ import { useEffect, useRef } from "react";
 import JsBarcode from "jsbarcode";
 
 import type { DepotCree } from "@/hooks/useCreerDepot";
+import { detailLigne } from "@/lib/comptoir";
 import { formatDate, formatDateHeure, formatFCFA, formatTelephone, nomAbrege } from "@/lib/format";
 import { LIBELLES_MOYEN, type Boutique, type Pressing } from "@/lib/types";
 
@@ -130,9 +131,7 @@ export function ZoneImpression({
         <div key={l.id} style={{ marginBottom: "1.5mm" }}>
           <div>{l.libelle}</div>
           <div style={ligne}>
-            <span>
-              {l.quantite} × {formatFCFA(l.prix_unitaire, false)}
-            </span>
+            <span>{detailLigne(l)}</span>
             <span>{formatFCFA(l.total, false)}</span>
           </div>
           {l.observations ? (

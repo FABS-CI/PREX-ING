@@ -8,6 +8,13 @@
       "when": 1794403603651,
       "tag": "0000_caisse",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1794404793585,
+      "tag": "0001_modes_avances",
+      "breakpoints": true
     }
   ]
 }

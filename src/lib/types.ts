@@ -133,6 +133,9 @@ export interface DepotLigne {
   total: number;
   observations: string | null;
   etiquette: string | null;
+  poids_kg?: number | null;
+  prix_lot?: number | null;
+  couvert_abonnement?: boolean | null;
 }
 
 export interface Paiement {

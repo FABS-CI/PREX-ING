@@ -52,6 +52,7 @@ import {
   lienWhatsApp,
   remplirModele,
 } from "@/lib/format";
+import { detailLigne } from "@/lib/comptoir";
 import { etiquettesParLigne } from "@/lib/numerotation";
 import { LIBELLES_MOYEN, LIBELLES_STATUT_DEPOT, type Paiement } from "@/lib/types";
 import { cn } from "@/lib/utils";
@@ -265,11 +266,9 @@ function FicheDepot() {
                 <li key={l.id} className={cn("px-4 py-3", l.statut === "retire" && "opacity-60")}>
                   <div className="flex items-start justify-between gap-3">
                     <div className="min-w-0">
-                      <p className="font-medium">
-                        {l.quantite} × {l.libelle}
-                      </p>
+                      <p className="font-medium">{l.libelle}</p>
                       <p className="text-xs text-muted-foreground">
-                        {formatFCFA(l.prix_unitaire)} l’unité
+                        {detailLigne(l)}
                         {l.etiquette ? ` · ${l.etiquette}` : ""}
                       </p>
                       {l.observations ? (

@@ -24,6 +24,12 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import {
+  EditeurForfaits,
+  EditeurFormules,
+  EditeurPrixKilo,
+} from "@/components/catalogue/ModesAvances";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useEspace } from "@/contexts/SessionContext";
 import {
   indexTarifs,
@@ -328,80 +334,99 @@ function CataloguePage() {
         }
       />
 
-      <div className="mb-4 max-w-xs">
-        <Input
-          placeholder="Filtrer les articles…"
-          value={filtre}
-          onChange={(e) => setFiltre(e.target.value)}
-          className="h-10"
-        />
-      </div>
+      <Tabs defaultValue="articles">
+        <TabsList className="mb-4 h-10 flex-wrap">
+          <TabsTrigger value="articles">Articles</TabsTrigger>
+          <TabsTrigger value="kilo">Au kilo</TabsTrigger>
+          <TabsTrigger value="forfaits">Forfaits</TabsTrigger>
+          <TabsTrigger value="abonnements">Abonnements</TabsTrigger>
+        </TabsList>
+        <TabsContent value="kilo">
+          <EditeurPrixKilo pressingId={pressing.id} catalogue={data} modifiable={modifiable} />
+        </TabsContent>
+        <TabsContent value="forfaits">
+          <EditeurForfaits pressingId={pressing.id} catalogue={data} modifiable={modifiable} />
+        </TabsContent>
+        <TabsContent value="abonnements">
+          <EditeurFormules pressingId={pressing.id} modifiable={modifiable} />
+        </TabsContent>
+        <TabsContent value="articles">
+          <div className="mb-4 max-w-xs">
+            <Input
+              placeholder="Filtrer les articles…"
+              value={filtre}
+              onChange={(e) => setFiltre(e.target.value)}
+              className="h-10"
+            />
+          </div>
 
-      {data.articles.length === 0 ? (
-        <EtatVide
-          icone={Tags}
-          titre="Catalogue vide"
-          texte="Ajoutez vos articles et vos services pour commencer."
-        />
-      ) : (
-        <div className="overflow-x-auto rounded-2xl border bg-card">
-          <table className="w-full border-collapse text-sm">
-            <thead className="sticky top-0 bg-muted/60">
-              <tr>
-                <th className="sticky left-0 z-10 min-w-[180px] bg-muted/60 px-4 py-3 text-left font-semibold">
-                  Article
-                </th>
-                {data.services.map((s) => (
-                  <th key={s.id} className="min-w-[110px] px-2 py-3 text-right font-semibold">
-                    <span className="block">{s.nom}</span>
-                    <span className="block text-xs font-normal text-muted-foreground">
-                      {s.delai_jours} j · express +{s.majoration_express_pct} %
-                    </span>
-                  </th>
-                ))}
-              </tr>
-            </thead>
-            {groupes.map((g) => (
-              <tbody key={g.id} className="border-t">
-                <tr>
-                  <th
-                    colSpan={data.services.length + 1}
-                    className="sticky left-0 bg-card px-4 pt-4 pb-1 text-left text-xs font-semibold text-muted-foreground"
-                  >
-                    {g.nom}
-                  </th>
-                </tr>
-                {g.articles.map((a) => (
-                  <tr key={a.id} className="border-t border-border/60 hover:bg-muted/30">
-                    <td className="sticky left-0 bg-card px-4 py-1.5 font-medium">{a.nom}</td>
-                    {data.services.map((s) => {
-                      const t = idx.commun(a.id, s.id);
-                      return (
-                        <td key={s.id} className="px-1 py-1">
-                          {modifiable ? (
-                            <CellulePrix
-                              key={`${t?.id ?? "x"}-${t?.prix ?? ""}`}
-                              pressingId={pressing.id}
-                              articleId={a.id}
-                              serviceId={s.id}
-                              tarifId={t?.id}
-                              prix={t?.prix ?? null}
-                            />
-                          ) : (
-                            <span className="montant block px-2 text-right">
-                              {t ? formatFCFA(t.prix, false) : "—"}
-                            </span>
-                          )}
-                        </td>
-                      );
-                    })}
+          {data.articles.length === 0 ? (
+            <EtatVide
+              icone={Tags}
+              titre="Catalogue vide"
+              texte="Ajoutez vos articles et vos services pour commencer."
+            />
+          ) : (
+            <div className="overflow-x-auto rounded-2xl border bg-card">
+              <table className="w-full border-collapse text-sm">
+                <thead className="sticky top-0 bg-muted/60">
+                  <tr>
+                    <th className="sticky left-0 z-10 min-w-[180px] bg-muted/60 px-4 py-3 text-left font-semibold">
+                      Article
+                    </th>
+                    {data.services.map((s) => (
+                      <th key={s.id} className="min-w-[110px] px-2 py-3 text-right font-semibold">
+                        <span className="block">{s.nom}</span>
+                        <span className="block text-xs font-normal text-muted-foreground">
+                          {s.delai_jours} j · express +{s.majoration_express_pct} %
+                        </span>
+                      </th>
+                    ))}
                   </tr>
+                </thead>
+                {groupes.map((g) => (
+                  <tbody key={g.id} className="border-t">
+                    <tr>
+                      <th
+                        colSpan={data.services.length + 1}
+                        className="sticky left-0 bg-card px-4 pt-4 pb-1 text-left text-xs font-semibold text-muted-foreground"
+                      >
+                        {g.nom}
+                      </th>
+                    </tr>
+                    {g.articles.map((a) => (
+                      <tr key={a.id} className="border-t border-border/60 hover:bg-muted/30">
+                        <td className="sticky left-0 bg-card px-4 py-1.5 font-medium">{a.nom}</td>
+                        {data.services.map((s) => {
+                          const t = idx.commun(a.id, s.id);
+                          return (
+                            <td key={s.id} className="px-1 py-1">
+                              {modifiable ? (
+                                <CellulePrix
+                                  key={`${t?.id ?? "x"}-${t?.prix ?? ""}`}
+                                  pressingId={pressing.id}
+                                  articleId={a.id}
+                                  serviceId={s.id}
+                                  tarifId={t?.id}
+                                  prix={t?.prix ?? null}
+                                />
+                              ) : (
+                                <span className="montant block px-2 text-right">
+                                  {t ? formatFCFA(t.prix, false) : "—"}
+                                </span>
+                              )}
+                            </td>
+                          );
+                        })}
+                      </tr>
+                    ))}
+                  </tbody>
                 ))}
-              </tbody>
-            ))}
-          </table>
-        </div>
-      )}
+              </table>
+            </div>
+          )}
+        </TabsContent>
+      </Tabs>
 
       {modifiable ? (
         <>
