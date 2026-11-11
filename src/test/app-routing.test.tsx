@@ -15,3 +15,21 @@ describe("App routing", () => {
     expect(matches.at(-1)?.routeId).not.toBe(rootRouteId);
   });
 });
+
+describe("Pages PREX'ING", () => {
+  const router = createRouter({ routeTree, context: { queryClient: new QueryClient() } });
+  it.each([
+    "/connexion",
+    "/inscription",
+    "/creer-pressing",
+    "/tableau-de-bord",
+    "/comptoir",
+    "/clients",
+    "/clients/abc",
+    "/catalogue",
+  ])("trouve une page pour %s", (chemin) => {
+    const matches = router.matchRoutes(chemin);
+    expect(matches.at(-1)?.routeId).not.toBe(rootRouteId);
+    expect(matches.at(-1)?.routeId).not.toBe("__root__");
+  });
+});

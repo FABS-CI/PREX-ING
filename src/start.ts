@@ -30,6 +30,9 @@ const csrfMiddleware = createCsrfMiddleware({
 // requireSupabaseAuth server functions need. Add it by hand only if Lovable Cloud or a
 // user-managed Supabase project is connected, no middleware here sets Authorization, and the
 // project did not intentionally replace it.
+// PREX'ING tourne entièrement dans l'appareil (session locale, futur mode hors ligne,
+// emballage Tauri / Capacitor) : pas de rendu serveur des pages.
 export const startInstance = createStart(() => ({
+  defaultSsr: false,
   requestMiddleware: [errorMiddleware, csrfMiddleware],
 }));
