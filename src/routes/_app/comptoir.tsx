@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { ShoppingBasket } from "lucide-react";
 import { toast } from "sonner";
 
@@ -24,6 +24,7 @@ import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import { useEspace } from "@/contexts/SessionContext";
 import { useCatalogue } from "@/hooks/useCatalogue";
+import { useSessionOuverte } from "@/hooks/useCaisse";
 import { useClient } from "@/hooks/useClients";
 import { modeleMessage, useCreerDepot, type DepotCree } from "@/hooks/useCreerDepot";
 import {
@@ -87,6 +88,7 @@ function Comptoir() {
   } | null>(null);
   const [impression, setImpression] = useState<ContenuImpression | null>(null);
   const rechercheRef = useRef<HTMLInputElement>(null);
+  const caisse = useSessionOuverte(boutique.id);
 
   // Client passé dans l'adresse (bouton « Nouveau dépôt » d'une fiche client).
   const ficheParam = useClient(clientParam);
@@ -305,6 +307,15 @@ function Comptoir() {
   return (
     <div className="lg:grid lg:grid-cols-[minmax(0,1fr)_380px] lg:gap-6">
       <div className="space-y-4">
+        {caisse.isSuccess && !caisse.data ? (
+          <Link
+            to="/caisse"
+            className="block rounded-xl border border-warning/40 bg-warning/10 px-4 py-2.5 text-sm hover:bg-warning/15"
+          >
+            La caisse n’est pas ouverte : les encaissements ne seront rattachés à aucune session.
+            Ouvrir la caisse
+          </Link>
+        ) : null}
         <ChoixClient
           ref={rechercheRef}
           pressingId={pressing.id}
