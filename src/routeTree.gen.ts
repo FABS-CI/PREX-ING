@@ -10,33 +10,278 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AppRouteImport } from './routes/_app'
+import { Route as ConnexionRouteImport } from './routes/connexion'
+import { Route as CreerPressingRouteImport } from './routes/creer-pressing'
+import { Route as InscriptionRouteImport } from './routes/inscription'
+import { Route as MotDePasseOublieRouteImport } from './routes/mot-de-passe-oublie'
+import { Route as NouveauMotDePasseRouteImport } from './routes/nouveau-mot-de-passe'
+import { Route as AppCaisseRouteImport } from './routes/_app/caisse'
+import { Route as AppCatalogueRouteImport } from './routes/_app/catalogue'
+import { Route as AppCommandesRouteImport } from './routes/_app/commandes'
+import { Route as AppComptoirRouteImport } from './routes/_app/comptoir'
+import { Route as AppDepensesRouteImport } from './routes/_app/depenses'
+import { Route as AppDepotsRouteImport } from './routes/_app/depots'
+import { Route as AppEquipeRouteImport } from './routes/_app/equipe'
+import { Route as AppLivraisonsRouteImport } from './routes/_app/livraisons'
+import { Route as AppParametresRouteImport } from './routes/_app/parametres'
+import { Route as AppRapportsRouteImport } from './routes/_app/rapports'
+import { Route as AppStockRouteImport } from './routes/_app/stock'
+import { Route as AppTableauDeBordRouteImport } from './routes/_app/tableau-de-bord'
+import { Route as AppClientsIndexRouteImport } from './routes/_app/clients/index'
+import { Route as AppClientsIdRouteImport } from './routes/_app/clients/$id'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AppRoute = AppRouteImport.update({
+  id: '/_app',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ConnexionRoute = ConnexionRouteImport.update({
+  id: '/connexion',
+  path: '/connexion',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CreerPressingRoute = CreerPressingRouteImport.update({
+  id: '/creer-pressing',
+  path: '/creer-pressing',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const InscriptionRoute = InscriptionRouteImport.update({
+  id: '/inscription',
+  path: '/inscription',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const MotDePasseOublieRoute = MotDePasseOublieRouteImport.update({
+  id: '/mot-de-passe-oublie',
+  path: '/mot-de-passe-oublie',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const NouveauMotDePasseRoute = NouveauMotDePasseRouteImport.update({
+  id: '/nouveau-mot-de-passe',
+  path: '/nouveau-mot-de-passe',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AppCaisseRoute = AppCaisseRouteImport.update({
+  id: '/caisse',
+  path: '/caisse',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppCatalogueRoute = AppCatalogueRouteImport.update({
+  id: '/catalogue',
+  path: '/catalogue',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppCommandesRoute = AppCommandesRouteImport.update({
+  id: '/commandes',
+  path: '/commandes',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppComptoirRoute = AppComptoirRouteImport.update({
+  id: '/comptoir',
+  path: '/comptoir',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppDepensesRoute = AppDepensesRouteImport.update({
+  id: '/depenses',
+  path: '/depenses',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppDepotsRoute = AppDepotsRouteImport.update({
+  id: '/depots',
+  path: '/depots',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppEquipeRoute = AppEquipeRouteImport.update({
+  id: '/equipe',
+  path: '/equipe',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppLivraisonsRoute = AppLivraisonsRouteImport.update({
+  id: '/livraisons',
+  path: '/livraisons',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppParametresRoute = AppParametresRouteImport.update({
+  id: '/parametres',
+  path: '/parametres',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppRapportsRoute = AppRapportsRouteImport.update({
+  id: '/rapports',
+  path: '/rapports',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppStockRoute = AppStockRouteImport.update({
+  id: '/stock',
+  path: '/stock',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppTableauDeBordRoute = AppTableauDeBordRouteImport.update({
+  id: '/tableau-de-bord',
+  path: '/tableau-de-bord',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppClientsIndexRoute = AppClientsIndexRouteImport.update({
+  id: '/clients/',
+  path: '/clients/',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppClientsIdRoute = AppClientsIdRouteImport.update({
+  id: '/clients/$id',
+  path: '/clients/$id',
+  getParentRoute: () => AppRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/connexion': typeof ConnexionRoute
+  '/creer-pressing': typeof CreerPressingRoute
+  '/inscription': typeof InscriptionRoute
+  '/mot-de-passe-oublie': typeof MotDePasseOublieRoute
+  '/nouveau-mot-de-passe': typeof NouveauMotDePasseRoute
+  '/caisse': typeof AppCaisseRoute
+  '/catalogue': typeof AppCatalogueRoute
+  '/commandes': typeof AppCommandesRoute
+  '/comptoir': typeof AppComptoirRoute
+  '/depenses': typeof AppDepensesRoute
+  '/depots': typeof AppDepotsRoute
+  '/equipe': typeof AppEquipeRoute
+  '/livraisons': typeof AppLivraisonsRoute
+  '/parametres': typeof AppParametresRoute
+  '/rapports': typeof AppRapportsRoute
+  '/stock': typeof AppStockRoute
+  '/tableau-de-bord': typeof AppTableauDeBordRoute
+  '/clients/$id': typeof AppClientsIdRoute
+  '/clients/': typeof AppClientsIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/connexion': typeof ConnexionRoute
+  '/creer-pressing': typeof CreerPressingRoute
+  '/inscription': typeof InscriptionRoute
+  '/mot-de-passe-oublie': typeof MotDePasseOublieRoute
+  '/nouveau-mot-de-passe': typeof NouveauMotDePasseRoute
+  '/caisse': typeof AppCaisseRoute
+  '/catalogue': typeof AppCatalogueRoute
+  '/commandes': typeof AppCommandesRoute
+  '/comptoir': typeof AppComptoirRoute
+  '/depenses': typeof AppDepensesRoute
+  '/depots': typeof AppDepotsRoute
+  '/equipe': typeof AppEquipeRoute
+  '/livraisons': typeof AppLivraisonsRoute
+  '/parametres': typeof AppParametresRoute
+  '/rapports': typeof AppRapportsRoute
+  '/stock': typeof AppStockRoute
+  '/tableau-de-bord': typeof AppTableauDeBordRoute
+  '/clients/$id': typeof AppClientsIdRoute
+  '/clients': typeof AppClientsIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/_app': typeof AppRouteWithChildren
+  '/connexion': typeof ConnexionRoute
+  '/creer-pressing': typeof CreerPressingRoute
+  '/inscription': typeof InscriptionRoute
+  '/mot-de-passe-oublie': typeof MotDePasseOublieRoute
+  '/nouveau-mot-de-passe': typeof NouveauMotDePasseRoute
+  '/_app/caisse': typeof AppCaisseRoute
+  '/_app/catalogue': typeof AppCatalogueRoute
+  '/_app/commandes': typeof AppCommandesRoute
+  '/_app/comptoir': typeof AppComptoirRoute
+  '/_app/depenses': typeof AppDepensesRoute
+  '/_app/depots': typeof AppDepotsRoute
+  '/_app/equipe': typeof AppEquipeRoute
+  '/_app/livraisons': typeof AppLivraisonsRoute
+  '/_app/parametres': typeof AppParametresRoute
+  '/_app/rapports': typeof AppRapportsRoute
+  '/_app/stock': typeof AppStockRoute
+  '/_app/tableau-de-bord': typeof AppTableauDeBordRoute
+  '/_app/clients/$id': typeof AppClientsIdRoute
+  '/_app/clients/': typeof AppClientsIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | '/'
+    | '/connexion'
+    | '/creer-pressing'
+    | '/inscription'
+    | '/mot-de-passe-oublie'
+    | '/nouveau-mot-de-passe'
+    | '/caisse'
+    | '/catalogue'
+    | '/commandes'
+    | '/comptoir'
+    | '/depenses'
+    | '/depots'
+    | '/equipe'
+    | '/livraisons'
+    | '/parametres'
+    | '/rapports'
+    | '/stock'
+    | '/tableau-de-bord'
+    | '/clients/$id'
+    | '/clients/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to:
+    | '/'
+    | '/connexion'
+    | '/creer-pressing'
+    | '/inscription'
+    | '/mot-de-passe-oublie'
+    | '/nouveau-mot-de-passe'
+    | '/caisse'
+    | '/catalogue'
+    | '/commandes'
+    | '/comptoir'
+    | '/depenses'
+    | '/depots'
+    | '/equipe'
+    | '/livraisons'
+    | '/parametres'
+    | '/rapports'
+    | '/stock'
+    | '/tableau-de-bord'
+    | '/clients/$id'
+    | '/clients'
+  id:
+    | '__root__'
+    | '/'
+    | '/_app'
+    | '/connexion'
+    | '/creer-pressing'
+    | '/inscription'
+    | '/mot-de-passe-oublie'
+    | '/nouveau-mot-de-passe'
+    | '/_app/caisse'
+    | '/_app/catalogue'
+    | '/_app/commandes'
+    | '/_app/comptoir'
+    | '/_app/depenses'
+    | '/_app/depots'
+    | '/_app/equipe'
+    | '/_app/livraisons'
+    | '/_app/parametres'
+    | '/_app/rapports'
+    | '/_app/stock'
+    | '/_app/tableau-de-bord'
+    | '/_app/clients/$id'
+    | '/_app/clients/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AppRoute: typeof AppRouteWithChildren
+  ConnexionRoute: typeof ConnexionRoute
+  CreerPressingRoute: typeof CreerPressingRoute
+  InscriptionRoute: typeof InscriptionRoute
+  MotDePasseOublieRoute: typeof MotDePasseOublieRoute
+  NouveauMotDePasseRoute: typeof NouveauMotDePasseRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -48,11 +293,193 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_app': {
+      id: '/_app'
+      path: ''
+      fullPath: '/'
+      preLoaderRoute: typeof AppRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/connexion': {
+      id: '/connexion'
+      path: '/connexion'
+      fullPath: '/connexion'
+      preLoaderRoute: typeof ConnexionRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/creer-pressing': {
+      id: '/creer-pressing'
+      path: '/creer-pressing'
+      fullPath: '/creer-pressing'
+      preLoaderRoute: typeof CreerPressingRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/inscription': {
+      id: '/inscription'
+      path: '/inscription'
+      fullPath: '/inscription'
+      preLoaderRoute: typeof InscriptionRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/mot-de-passe-oublie': {
+      id: '/mot-de-passe-oublie'
+      path: '/mot-de-passe-oublie'
+      fullPath: '/mot-de-passe-oublie'
+      preLoaderRoute: typeof MotDePasseOublieRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/nouveau-mot-de-passe': {
+      id: '/nouveau-mot-de-passe'
+      path: '/nouveau-mot-de-passe'
+      fullPath: '/nouveau-mot-de-passe'
+      preLoaderRoute: typeof NouveauMotDePasseRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_app/caisse': {
+      id: '/_app/caisse'
+      path: '/caisse'
+      fullPath: '/caisse'
+      preLoaderRoute: typeof AppCaisseRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/catalogue': {
+      id: '/_app/catalogue'
+      path: '/catalogue'
+      fullPath: '/catalogue'
+      preLoaderRoute: typeof AppCatalogueRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/commandes': {
+      id: '/_app/commandes'
+      path: '/commandes'
+      fullPath: '/commandes'
+      preLoaderRoute: typeof AppCommandesRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/comptoir': {
+      id: '/_app/comptoir'
+      path: '/comptoir'
+      fullPath: '/comptoir'
+      preLoaderRoute: typeof AppComptoirRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/depenses': {
+      id: '/_app/depenses'
+      path: '/depenses'
+      fullPath: '/depenses'
+      preLoaderRoute: typeof AppDepensesRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/depots': {
+      id: '/_app/depots'
+      path: '/depots'
+      fullPath: '/depots'
+      preLoaderRoute: typeof AppDepotsRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/equipe': {
+      id: '/_app/equipe'
+      path: '/equipe'
+      fullPath: '/equipe'
+      preLoaderRoute: typeof AppEquipeRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/livraisons': {
+      id: '/_app/livraisons'
+      path: '/livraisons'
+      fullPath: '/livraisons'
+      preLoaderRoute: typeof AppLivraisonsRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/parametres': {
+      id: '/_app/parametres'
+      path: '/parametres'
+      fullPath: '/parametres'
+      preLoaderRoute: typeof AppParametresRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/rapports': {
+      id: '/_app/rapports'
+      path: '/rapports'
+      fullPath: '/rapports'
+      preLoaderRoute: typeof AppRapportsRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/stock': {
+      id: '/_app/stock'
+      path: '/stock'
+      fullPath: '/stock'
+      preLoaderRoute: typeof AppStockRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/tableau-de-bord': {
+      id: '/_app/tableau-de-bord'
+      path: '/tableau-de-bord'
+      fullPath: '/tableau-de-bord'
+      preLoaderRoute: typeof AppTableauDeBordRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/clients/': {
+      id: '/_app/clients/'
+      path: '/clients'
+      fullPath: '/clients/'
+      preLoaderRoute: typeof AppClientsIndexRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/clients/$id': {
+      id: '/_app/clients/$id'
+      path: '/clients/$id'
+      fullPath: '/clients/$id'
+      preLoaderRoute: typeof AppClientsIdRouteImport
+      parentRoute: typeof AppRoute
+    }
   }
 }
 
+interface AppRouteChildren {
+  AppCaisseRoute: typeof AppCaisseRoute
+  AppCatalogueRoute: typeof AppCatalogueRoute
+  AppCommandesRoute: typeof AppCommandesRoute
+  AppComptoirRoute: typeof AppComptoirRoute
+  AppDepensesRoute: typeof AppDepensesRoute
+  AppDepotsRoute: typeof AppDepotsRoute
+  AppEquipeRoute: typeof AppEquipeRoute
+  AppLivraisonsRoute: typeof AppLivraisonsRoute
+  AppParametresRoute: typeof AppParametresRoute
+  AppRapportsRoute: typeof AppRapportsRoute
+  AppStockRoute: typeof AppStockRoute
+  AppTableauDeBordRoute: typeof AppTableauDeBordRoute
+  AppClientsIdRoute: typeof AppClientsIdRoute
+  AppClientsIndexRoute: typeof AppClientsIndexRoute
+}
+
+const AppRouteChildren: AppRouteChildren = {
+  AppCaisseRoute: AppCaisseRoute,
+  AppCatalogueRoute: AppCatalogueRoute,
+  AppCommandesRoute: AppCommandesRoute,
+  AppComptoirRoute: AppComptoirRoute,
+  AppDepensesRoute: AppDepensesRoute,
+  AppDepotsRoute: AppDepotsRoute,
+  AppEquipeRoute: AppEquipeRoute,
+  AppLivraisonsRoute: AppLivraisonsRoute,
+  AppParametresRoute: AppParametresRoute,
+  AppRapportsRoute: AppRapportsRoute,
+  AppStockRoute: AppStockRoute,
+  AppTableauDeBordRoute: AppTableauDeBordRoute,
+  AppClientsIdRoute: AppClientsIdRoute,
+  AppClientsIndexRoute: AppClientsIndexRoute,
+}
+
+const AppRouteWithChildren = AppRoute._addFileChildren(AppRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AppRoute: AppRouteWithChildren,
+  ConnexionRoute: ConnexionRoute,
+  CreerPressingRoute: CreerPressingRoute,
+  InscriptionRoute: InscriptionRoute,
+  MotDePasseOublieRoute: MotDePasseOublieRoute,
+  NouveauMotDePasseRoute: NouveauMotDePasseRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
