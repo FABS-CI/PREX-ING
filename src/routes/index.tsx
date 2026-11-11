@@ -1,23 +1,17 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Navigate } from "@tanstack/react-router";
 
-// The home route ships no og:image, so serve-time hosting can inject the
-// project's social preview (explicit og:image or latest screenshot).
+import { Chargement } from "@/components/common/Chargement";
+import { accueilPourRole } from "@/components/layout/navigation";
+import { useSession } from "@/contexts/SessionContext";
+
 export const Route = createFileRoute("/")({
-  component: Index,
+  component: Accueil,
 });
 
-// IMPORTANT: Replace this placeholder. See ./README.md for routing conventions.
-function Index() {
-  return (
-    <div
-      className="flex min-h-screen items-center justify-center"
-      style={{ backgroundColor: "#fcfbf8" }}
-    >
-      <img
-        data-lovable-blank-page-placeholder="REMOVE_THIS"
-        src="https://cdn.gpteng.co/blank-app-v1.svg"
-        alt="Your app will live here!"
-      />
-    </div>
-  );
+function Accueil() {
+  const { etat, role } = useSession();
+  if (etat === "chargement") return <Chargement plein />;
+  if (etat === "deconnecte") return <Navigate to="/connexion" replace />;
+  if (etat === "sans_pressing") return <Navigate to="/creer-pressing" replace />;
+  return <Navigate to={accueilPourRole(role)} replace />;
 }
