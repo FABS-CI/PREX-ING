@@ -36,6 +36,13 @@
       "when": 1794412581922,
       "tag": "0004_livraisons",
       "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1794413840745,
+      "tag": "0005_portail_client",
+      "breakpoints": true
     }
   ]
 }

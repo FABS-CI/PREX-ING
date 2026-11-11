@@ -764,6 +764,7 @@ export type Database = {
           forfait_id: string | null
           frais_livraison: number
           id: string
+          jeton_suivi: string
           mode: Database["public"]["Enums"]["mode_facturation"]
           net_a_payer: number
           numero: string
@@ -793,6 +794,7 @@ export type Database = {
           forfait_id?: string | null
           frais_livraison?: number
           id?: string
+          jeton_suivi?: string
           mode?: Database["public"]["Enums"]["mode_facturation"]
           net_a_payer?: number
           numero: string
@@ -822,6 +824,7 @@ export type Database = {
           forfait_id?: string | null
           frais_livraison?: number
           id?: string
+          jeton_suivi?: string
           mode?: Database["public"]["Enums"]["mode_facturation"]
           net_a_payer?: number
           numero?: string
@@ -1754,6 +1757,7 @@ export type Database = {
           logo_url: string | null
           nom: string
           rccm: string | null
+          slug: string | null
           statut_abonnement: Database["public"]["Enums"]["statut_abonnement_saas"]
           telephone: string | null
           updated_at: string
@@ -1771,6 +1775,7 @@ export type Database = {
           logo_url?: string | null
           nom: string
           rccm?: string | null
+          slug?: string | null
           statut_abonnement?: Database["public"]["Enums"]["statut_abonnement_saas"]
           telephone?: string | null
           updated_at?: string
@@ -1788,6 +1793,7 @@ export type Database = {
           logo_url?: string | null
           nom?: string
           rccm?: string | null
+          slug?: string | null
           statut_abonnement?: Database["public"]["Enums"]["statut_abonnement_saas"]
           telephone?: string | null
           updated_at?: string
@@ -2453,6 +2459,20 @@ export type Database = {
         }
         Returns: string
       }
+      demander_ramassage: {
+        Args: {
+          p_adresse: string
+          p_boutique: string
+          p_creneau?: string
+          p_jour?: string
+          p_nom: string
+          p_note?: string
+          p_repere?: string
+          p_slug: string
+          p_telephone: string
+        }
+        Returns: Json
+      }
       etat_pointage: { Args: { p_pressing: string }; Returns: Json }
       has_role: {
         Args: {
@@ -2467,6 +2487,7 @@ export type Database = {
         Args: { p_pressing: string }
         Returns: Database["public"]["Enums"]["role_membre"]
       }
+      page_pressing: { Args: { p_slug: string }; Returns: Json }
       payer_salaire: {
         Args: {
           p_moyen: Database["public"]["Enums"]["moyen_paiement"]
@@ -2499,6 +2520,8 @@ export type Database = {
         Returns: boolean
       }
       pointer: { Args: { p_pressing: string }; Returns: Json }
+      slug_de: { Args: { p_texte: string }; Returns: string }
+      suivi_depot: { Args: { p_jeton: string }; Returns: Json }
       terminer_livraison: {
         Args: {
           p_code?: string
