@@ -27,6 +27,15 @@ describe("Pages PREX'ING", () => {
     "/clients",
     "/clients/abc",
     "/catalogue",
+    "/depots",
+    "/depots/abc",
+    "/caisse",
+    "/livraisons",
+    "/commandes",
+    "/equipe",
+    "/parametres",
+    "/p/mon-pressing",
+    "/suivi/abc",
   ])("trouve une page pour %s", (chemin) => {
     const matches = router.matchRoutes(chemin);
     expect(matches.at(-1)?.routeId).not.toBe(rootRouteId);

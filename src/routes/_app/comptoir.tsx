@@ -30,6 +30,7 @@ import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sh
 import { useEspace } from "@/contexts/SessionContext";
 import { useCatalogue } from "@/hooks/useCatalogue";
 import { useSessionOuverte } from "@/hooks/useCaisse";
+import { lienSuivi } from "@/hooks/usePortail";
 import { useClient } from "@/hooks/useClients";
 import { useAbonnementActif, useForfaits, usePrixKilo } from "@/hooks/useModesAvances";
 import { modeleMessage, useCreerDepot, type DepotCree } from "@/hooks/useCreerDepot";
@@ -198,6 +199,9 @@ function Comptoir() {
         const modele =
           (await modeleMessage(pressing.id, "depot_cree")) ??
           "Bonjour {client}, votre dépôt n° {numero} est bien enregistré chez {boutique}. Reste à payer : {reste} FCFA. Retrait prévu le {date}.";
+        const suivi = depot.depot.jeton_suivi
+          ? `\nSuivez votre dépôt : ${lienSuivi(depot.depot.jeton_suivi)}`
+          : "";
         whatsapp = lienWhatsApp(
           client.telephone,
           remplirModele(modele, {
@@ -207,7 +211,7 @@ function Comptoir() {
             reste: formatFCFA(depot.depot.reste_a_payer, false),
             date: formatDate(depot.depot.date_retrait_prevue),
             boutique: boutique.nom,
-          }),
+          }) + suivi,
         );
       }
       setResultat({ depot, client, whatsapp });

@@ -28,6 +28,8 @@ import { Route as AppParametresRouteImport } from './routes/_app/parametres'
 import { Route as AppRapportsRouteImport } from './routes/_app/rapports'
 import { Route as AppStockRouteImport } from './routes/_app/stock'
 import { Route as AppTableauDeBordRouteImport } from './routes/_app/tableau-de-bord'
+import { Route as PSlugRouteImport } from './routes/p.$slug'
+import { Route as SuiviJetonRouteImport } from './routes/suivi.$jeton'
 import { Route as AppClientsIndexRouteImport } from './routes/_app/clients/index'
 import { Route as AppClientsIdRouteImport } from './routes/_app/clients/$id'
 import { Route as AppDepotsIndexRouteImport } from './routes/_app/depots/index'
@@ -127,6 +129,16 @@ const AppTableauDeBordRoute = AppTableauDeBordRouteImport.update({
   path: '/tableau-de-bord',
   getParentRoute: () => AppRoute,
 } as any)
+const PSlugRoute = PSlugRouteImport.update({
+  id: '/p/$slug',
+  path: '/p/$slug',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SuiviJetonRoute = SuiviJetonRouteImport.update({
+  id: '/suivi/$jeton',
+  path: '/suivi/$jeton',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AppClientsIndexRoute = AppClientsIndexRouteImport.update({
   id: '/clients/',
   path: '/clients/',
@@ -167,6 +179,8 @@ export interface FileRoutesByFullPath {
   '/rapports': typeof AppRapportsRoute
   '/stock': typeof AppStockRoute
   '/tableau-de-bord': typeof AppTableauDeBordRoute
+  '/p/$slug': typeof PSlugRoute
+  '/suivi/$jeton': typeof SuiviJetonRoute
   '/clients/$id': typeof AppClientsIdRoute
   '/depots/$id': typeof AppDepotsIdRoute
   '/clients/': typeof AppClientsIndexRoute
@@ -190,6 +204,8 @@ export interface FileRoutesByTo {
   '/rapports': typeof AppRapportsRoute
   '/stock': typeof AppStockRoute
   '/tableau-de-bord': typeof AppTableauDeBordRoute
+  '/p/$slug': typeof PSlugRoute
+  '/suivi/$jeton': typeof SuiviJetonRoute
   '/clients/$id': typeof AppClientsIdRoute
   '/depots/$id': typeof AppDepotsIdRoute
   '/clients': typeof AppClientsIndexRoute
@@ -216,6 +232,8 @@ export interface FileRoutesById {
   '/_app/rapports': typeof AppRapportsRoute
   '/_app/stock': typeof AppStockRoute
   '/_app/tableau-de-bord': typeof AppTableauDeBordRoute
+  '/p/$slug': typeof PSlugRoute
+  '/suivi/$jeton': typeof SuiviJetonRoute
   '/_app/clients/$id': typeof AppClientsIdRoute
   '/_app/depots/$id': typeof AppDepotsIdRoute
   '/_app/clients/': typeof AppClientsIndexRoute
@@ -242,6 +260,8 @@ export interface FileRouteTypes {
     | '/rapports'
     | '/stock'
     | '/tableau-de-bord'
+    | '/p/$slug'
+    | '/suivi/$jeton'
     | '/clients/$id'
     | '/depots/$id'
     | '/clients/'
@@ -265,6 +285,8 @@ export interface FileRouteTypes {
     | '/rapports'
     | '/stock'
     | '/tableau-de-bord'
+    | '/p/$slug'
+    | '/suivi/$jeton'
     | '/clients/$id'
     | '/depots/$id'
     | '/clients'
@@ -290,6 +312,8 @@ export interface FileRouteTypes {
     | '/_app/rapports'
     | '/_app/stock'
     | '/_app/tableau-de-bord'
+    | '/p/$slug'
+    | '/suivi/$jeton'
     | '/_app/clients/$id'
     | '/_app/depots/$id'
     | '/_app/clients/'
@@ -304,6 +328,8 @@ export interface RootRouteChildren {
   InscriptionRoute: typeof InscriptionRoute
   MotDePasseOublieRoute: typeof MotDePasseOublieRoute
   NouveauMotDePasseRoute: typeof NouveauMotDePasseRoute
+  PSlugRoute: typeof PSlugRoute
+  SuiviJetonRoute: typeof SuiviJetonRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -441,6 +467,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppTableauDeBordRouteImport
       parentRoute: typeof AppRoute
     }
+    '/p/$slug': {
+      id: '/p/$slug'
+      path: '/p/$slug'
+      fullPath: '/p/$slug'
+      preLoaderRoute: typeof PSlugRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/suivi/$jeton': {
+      id: '/suivi/$jeton'
+      path: '/suivi/$jeton'
+      fullPath: '/suivi/$jeton'
+      preLoaderRoute: typeof SuiviJetonRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/_app/clients/': {
       id: '/_app/clients/'
       path: '/clients'
@@ -530,6 +570,8 @@ const rootRouteChildren: RootRouteChildren = {
   InscriptionRoute: InscriptionRoute,
   MotDePasseOublieRoute: MotDePasseOublieRoute,
   NouveauMotDePasseRoute: NouveauMotDePasseRoute,
+  PSlugRoute: PSlugRoute,
+  SuiviJetonRoute: SuiviJetonRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
