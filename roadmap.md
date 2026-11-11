@@ -12,6 +12,6 @@
 
 ## Équipe et salaires
 - [x] Importer les dix fichiers à l’identique et supprimer l’archive.
-- [ ] Appliquer le SQL fourni à l’identique et régénérer les types.
-- [ ] Vérifier les 34 tests et les erreurs signalées.
-- [ ] Créer Test Salaire, marquer une absence, ajouter 10 000 FCFA d’avance et 5 000 FCFA de prime ; vérifier 52 692 FCFA nets enregistrés.
+- [x] Appliquer les fonctions et le déclencheur du SQL fourni, puis régénérer les types (deux espaces d’indentation diffèrent dans la copie appliquée ; aucune instruction SQL modifiée).
+- [x] Vérifier les 34 tests et les erreurs signalées.
+- [x] Créer Test Salaire, marquer une absence, ajouter 10 000 FCFA d’avance et 5 000 FCFA de prime ; vérifier 52 692 FCFA nets enregistrés et relus.
