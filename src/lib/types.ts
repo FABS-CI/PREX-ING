@@ -122,6 +122,7 @@ export interface Depot {
   emplacement: string | null;
   observations: string | null;
   created_at: string;
+  jeton_suivi?: string | null;
 }
 
 export interface DepotLigne {

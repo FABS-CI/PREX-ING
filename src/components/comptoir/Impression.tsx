@@ -2,6 +2,8 @@ import { useEffect, useRef } from "react";
 import JsBarcode from "jsbarcode";
 
 import type { DepotCree } from "@/hooks/useCreerDepot";
+import { QrCode } from "@/components/common/QrCode";
+import { lienSuivi } from "@/hooks/usePortail";
 import { detailLigne } from "@/lib/comptoir";
 import { formatDate, formatDateHeure, formatFCFA, formatTelephone, nomAbrege } from "@/lib/format";
 import { LIBELLES_MOYEN, type Boutique, type Pressing } from "@/lib/types";
@@ -179,6 +181,16 @@ export function ZoneImpression({
       </div>
       {boutique.pied_ticket ? (
         <div style={{ textAlign: "center", marginTop: "3mm" }}>{boutique.pied_ticket}</div>
+      ) : null}
+      {d.jeton_suivi ? (
+        <div style={{ textAlign: "center", marginTop: "3mm" }}>
+          <QrCode
+            valeur={lienSuivi(d.jeton_suivi)}
+            taille={110}
+            label="QR code de suivi du dépôt"
+          />
+          <div style={{ fontSize: 9 }}>Scannez pour suivre votre dépôt</div>
+        </div>
       ) : null}
       <div style={{ textAlign: "center", marginTop: "2mm", fontSize: 9 }}>
         Présentez ce ticket pour retirer votre linge.
