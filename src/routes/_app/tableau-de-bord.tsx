@@ -138,23 +138,29 @@ function TableauDeBordPage() {
               ) : (
                 <ul className="divide-y">
                   {data.enRetard.map((d) => (
-                    <li key={d.id} className="flex items-center justify-between gap-3 px-5 py-3">
-                      <div className="min-w-0">
-                        <p className="truncate font-medium">{d.client_nom}</p>
-                        <p className="text-xs text-muted-foreground">
-                          {d.numero} · prévu le {formatDate(d.date_retrait_prevue)}
-                        </p>
-                      </div>
-                      <div className="text-right">
-                        <p className="text-sm font-semibold text-destructive">
-                          {d.jours_retard} j de retard
-                        </p>
-                        {d.reste_a_payer > 0 ? (
-                          <p className="montant text-xs text-muted-foreground">
-                            reste {formatFCFA(d.reste_a_payer)}
+                    <li key={d.id}>
+                      <Link
+                        to="/depots/$id"
+                        params={{ id: d.id }}
+                        className="flex items-center justify-between gap-3 px-5 py-3 hover:bg-muted/40"
+                      >
+                        <div className="min-w-0">
+                          <p className="truncate font-medium">{d.client_nom}</p>
+                          <p className="text-xs text-muted-foreground">
+                            {d.numero} · prévu le {formatDate(d.date_retrait_prevue)}
                           </p>
-                        ) : null}
-                      </div>
+                        </div>
+                        <div className="text-right">
+                          <p className="text-sm font-semibold text-destructive">
+                            {d.jours_retard} j de retard
+                          </p>
+                          {d.reste_a_payer > 0 ? (
+                            <p className="montant text-xs text-muted-foreground">
+                              reste {formatFCFA(d.reste_a_payer)}
+                            </p>
+                          ) : null}
+                        </div>
+                      </Link>
                     </li>
                   ))}
                 </ul>
@@ -182,19 +188,25 @@ function TableauDeBordPage() {
               ) : (
                 <ul className="divide-y">
                   {data.derniersDepots.map((d) => (
-                    <li key={d.id} className="flex items-center justify-between gap-3 px-5 py-3">
-                      <div className="min-w-0">
-                        <p className="truncate font-medium">{d.client_nom}</p>
-                        <p className="text-xs text-muted-foreground">
-                          {d.numero} · retrait {formatDate(d.date_retrait_prevue)}
-                        </p>
-                      </div>
-                      <div className="flex flex-col items-end gap-1">
-                        <span className="montant text-sm font-semibold">
-                          {formatFCFA(d.net_a_payer)}
-                        </span>
-                        <BadgeStatutDepot statut={d.statut as StatutDepot} />
-                      </div>
+                    <li key={d.id}>
+                      <Link
+                        to="/depots/$id"
+                        params={{ id: d.id }}
+                        className="flex items-center justify-between gap-3 px-5 py-3 hover:bg-muted/40"
+                      >
+                        <div className="min-w-0">
+                          <p className="truncate font-medium">{d.client_nom}</p>
+                          <p className="text-xs text-muted-foreground">
+                            {d.numero} · retrait {formatDate(d.date_retrait_prevue)}
+                          </p>
+                        </div>
+                        <div className="flex flex-col items-end gap-1">
+                          <span className="montant text-sm font-semibold">
+                            {formatFCFA(d.net_a_payer)}
+                          </span>
+                          <BadgeStatutDepot statut={d.statut as StatutDepot} />
+                        </div>
+                      </Link>
                     </li>
                   ))}
                 </ul>

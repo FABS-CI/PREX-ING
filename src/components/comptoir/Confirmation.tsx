@@ -1,4 +1,5 @@
-import { CheckCircle2, MessageCircle, Plus, Printer, Tag } from "lucide-react";
+import { Link } from "@tanstack/react-router";
+import { CheckCircle2, ExternalLink, MessageCircle, Plus, Printer, Tag } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import type { DepotCree } from "@/hooks/useCreerDepot";
@@ -82,6 +83,12 @@ export function Confirmation({ depot, clientNom, lienWhatsApp, onImprimer, onNou
             Pas d’envoi WhatsApp : le client n’a pas donné son accord pour recevoir des messages.
           </p>
         )}
+        <Button asChild variant="ghost" className="h-12 text-base sm:col-span-2">
+          <Link to="/depots/$id" params={{ id: d.id }}>
+            <ExternalLink />
+            Voir le dépôt
+          </Link>
+        </Button>
         <Button className="h-14 text-base sm:col-span-2" onClick={onNouveau} autoFocus>
           <Plus />
           Nouveau dépôt
