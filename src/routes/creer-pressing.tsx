@@ -137,6 +137,10 @@ function CreerPressing() {
           {envoi ? <Loader2 className="animate-spin" /> : null}
           Créer mon pressing
         </Button>
+        <p className="rounded-lg bg-muted px-3 py-2.5 text-sm text-muted-foreground">
+          Vous êtes employé d’un pressing ? Ne créez pas de pressing : donnez l’email de votre
+          compte au propriétaire, il vous ajoutera dans Équipe. Reconnectez-vous ensuite.
+        </p>
       </form>
     </AuthLayout>
   );

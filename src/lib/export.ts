@@ -70,3 +70,37 @@ td.n{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
   w.focus();
   setTimeout(() => w.print(), 300);
 }
+
+/** Fiche de paie simplifiée, au format A4 (Enregistrer en PDF). */
+export function imprimerFichePaie(f: {
+  pressing: string;
+  boutique: string;
+  employe: string;
+  poste: string | null;
+  mois: string;
+  lignes: [string, number][];
+  net: number;
+  detail: string;
+  paye: string | null;
+}): void {
+  const w = window.open("", "_blank", "width=800,height=1000");
+  if (!w) return;
+  const n = (x: number) => `${x.toLocaleString("fr-FR")} FCFA`;
+  w.document
+    .write(`<!doctype html><html lang="fr"><head><meta charset="utf-8"><title>Fiche de paie — ${html(f.employe)} — ${html(f.mois)}</title><style>
+@page{size:A4;margin:18mm}body{font-family:Inter,Arial,sans-serif;color:#0A1630;font-size:11pt}
+header{display:flex;justify-content:space-between;border-bottom:2px solid #0B3D91;padding-bottom:10px;margin-bottom:18px}
+h1{font-size:18pt;margin:0;color:#0B3D91}.m{color:#4A5876}table{width:100%;border-collapse:collapse;margin-top:12px}
+td{padding:8px;border-bottom:1px solid #E2E7F0}td.n{text-align:right;font-variant-numeric:tabular-nums}
+tr.net td{font-weight:700;font-size:13pt;border-top:2px solid #0B3D91;border-bottom:none}
+footer{margin-top:40px;display:flex;justify-content:space-between}.sig{width:45%;border-top:1px solid #4A5876;padding-top:6px;color:#4A5876;font-size:9pt}
+</style></head><body><header><div><h1>Fiche de paie</h1><div class="m">${html(f.mois)}</div></div><div style="text-align:right"><strong>${html(f.pressing)}</strong><div class="m">${html(f.boutique)}</div></div></header>
+<p><strong>${html(f.employe)}</strong>${f.poste ? ` · ${html(f.poste)}` : ""}</p><p class="m">${html(f.detail)}</p>
+<table>${f.lignes.map(([l, v]) => `<tr><td>${html(l)}</td><td class="n">${n(v)}</td></tr>`).join("")}<tr class="net"><td>Net à payer</td><td class="n">${n(f.net)}</td></tr></table>
+<p class="m">${f.paye ? html(f.paye) : "Non payé"}</p>
+<p class="m" style="font-size:9pt">Document simplifié, sans cotisations sociales (CNPS) ni impôt sur salaire.</p>
+<footer><div class="sig">Signature de l’employeur</div><div class="sig">Signature de l’employé</div></footer></body></html>`);
+  w.document.close();
+  w.focus();
+  setTimeout(() => w.print(), 300);
+}

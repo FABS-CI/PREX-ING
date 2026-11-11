@@ -1,11 +1,14 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { AlarmClock, CheckCircle2, Plus, Shirt, TriangleAlert } from "lucide-react";
+import { AlarmClock, CheckCircle2, LogIn, LogOut, Plus, Shirt, TriangleAlert } from "lucide-react";
+import { toast } from "sonner";
+import { messageErreur } from "@/lib/erreurs";
 
 import { BadgeStatutDepot } from "@/components/common/Badges";
 import { Chargement } from "@/components/common/Chargement";
 import { EtatVide } from "@/components/common/EtatVide";
 import { Button } from "@/components/ui/button";
 import { useEspace } from "@/contexts/SessionContext";
+import { useEtatPointage, usePointer } from "@/hooks/useEquipe";
 import { useTableauDeBord } from "@/hooks/useTableauDeBord";
 import { formatDate, formatFCFA } from "@/lib/format";
 import type { StatutDepot } from "@/lib/types";
@@ -44,6 +47,42 @@ function Indicateur({
   );
 }
 
+function CartePointage({ pressingId }: { pressingId: string }) {
+  const { data: etat } = useEtatPointage(pressingId);
+  const pointer = usePointer(pressingId);
+  if (!etat) return null;
+  const present = Boolean(etat.arrivee);
+  return (
+    <div className="flex flex-wrap items-center justify-between gap-3 rounded-xl border bg-card px-4 py-3 text-sm">
+      <span>
+        {present
+          ? `Arrivé à ${new Date(etat.arrivee!).toLocaleTimeString("fr-FR", { hour: "2-digit", minute: "2-digit" })}`
+          : "Vous n’avez pas encore pointé aujourd’hui."}
+      </span>
+      <Button
+        size="sm"
+        variant={present ? "outline" : "default"}
+        disabled={pointer.isPending}
+        onClick={() =>
+          pointer
+            .mutateAsync()
+            .then((e) =>
+              toast.success(
+                e.arrivee
+                  ? "Arrivée enregistrée. Bonne journée !"
+                  : "Départ enregistré. À demain !",
+              ),
+            )
+            .catch((e: unknown) => toast.error(messageErreur(e)))
+        }
+      >
+        {present ? <LogOut /> : <LogIn />}
+        {present ? "Pointer mon départ" : "Pointer mon arrivée"}
+      </Button>
+    </div>
+  );
+}
+
 function TableauDeBordPage() {
   const { pressing, boutique, profil } = useEspace();
   const { data, isLoading, error } = useTableauDeBord(pressing.id, boutique.id);
@@ -70,6 +109,8 @@ function TableauDeBordPage() {
           </Link>
         </Button>
       </div>
+
+      <CartePointage pressingId={pressing.id} />
 
       {isLoading ? <Chargement /> : null}
       {error ? (

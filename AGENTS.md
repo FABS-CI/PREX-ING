@@ -37,3 +37,4 @@ use the editor.
 - Schema reference SQL lives in `database/`; schema changes go through reviewed migrations only.
 - Advanced billing uses shared cart calculations and mode-specific catalogue/counter modules, while database triggers remain authoritative for saved line totals, to keep previews and stored deposits consistent.
 - Management screens share browser-side queries and report calculations; cash expenses create cash movements through database triggers rather than UI inserts, preventing duplicate withdrawals.
+- Team screens use shared salary calculations for previews; membership assignment, self-attendance and salary payment use database functions so privileged operations are checked at the database boundary.
