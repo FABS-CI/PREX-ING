@@ -219,29 +219,32 @@ function FicheClient() {
           {depots.data && depots.data.length > 0 ? (
             <ul className="divide-y overflow-hidden rounded-2xl border bg-card">
               {depots.data.map((d) => (
-                <li
-                  key={d.id}
-                  className="flex flex-wrap items-center justify-between gap-3 px-4 py-3"
-                >
-                  <div className="min-w-0">
-                    <p className="font-medium">{d.numero}</p>
-                    <p className="text-xs text-muted-foreground">
-                      Déposé le {formatDate(d.created_at)} · retrait{" "}
-                      {formatDate(d.date_retrait_prevue)}
-                    </p>
-                  </div>
-                  <div className="flex items-center gap-3">
-                    <BadgeStatutDepot statut={d.statut} />
-                    <BadgeStatutPaiement statut={d.statut_paiement} />
-                    <div className="text-right">
-                      <p className="montant text-sm font-semibold">{formatFCFA(d.net_a_payer)}</p>
-                      {d.reste_a_payer > 0 ? (
-                        <p className="montant text-xs text-destructive">
-                          reste {formatFCFA(d.reste_a_payer)}
-                        </p>
-                      ) : null}
+                <li key={d.id}>
+                  <Link
+                    to="/depots/$id"
+                    params={{ id: d.id }}
+                    className="flex flex-wrap items-center justify-between gap-3 px-4 py-3 hover:bg-muted/40"
+                  >
+                    <div className="min-w-0">
+                      <p className="font-medium">{d.numero}</p>
+                      <p className="text-xs text-muted-foreground">
+                        Déposé le {formatDate(d.created_at)} · retrait{" "}
+                        {formatDate(d.date_retrait_prevue)}
+                      </p>
                     </div>
-                  </div>
+                    <div className="flex items-center gap-3">
+                      <BadgeStatutDepot statut={d.statut} />
+                      <BadgeStatutPaiement statut={d.statut_paiement} />
+                      <div className="text-right">
+                        <p className="montant text-sm font-semibold">{formatFCFA(d.net_a_payer)}</p>
+                        {d.reste_a_payer > 0 ? (
+                          <p className="montant text-xs text-destructive">
+                            reste {formatFCFA(d.reste_a_payer)}
+                          </p>
+                        ) : null}
+                      </div>
+                    </div>
+                  </Link>
                 </li>
               ))}
             </ul>

@@ -1,8 +1,6 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Outlet } from "@tanstack/react-router";
 
-import { BientotDisponible } from "@/components/common/BientotDisponible";
-
+/** Parent des pages Dépôts : la liste (depots/index.tsx) et la fiche (depots/$id.tsx). */
 export const Route = createFileRoute("/_app/depots")({
-  head: () => ({ meta: [{ title: "Dépôts — PREX’ING" }] }),
-  component: () => <BientotDisponible titre="Dépôts" />,
+  component: () => <Outlet />,
 });

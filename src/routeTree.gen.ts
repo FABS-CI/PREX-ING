@@ -30,6 +30,8 @@ import { Route as AppStockRouteImport } from './routes/_app/stock'
 import { Route as AppTableauDeBordRouteImport } from './routes/_app/tableau-de-bord'
 import { Route as AppClientsIndexRouteImport } from './routes/_app/clients/index'
 import { Route as AppClientsIdRouteImport } from './routes/_app/clients/$id'
+import { Route as AppDepotsIndexRouteImport } from './routes/_app/depots/index'
+import { Route as AppDepotsIdRouteImport } from './routes/_app/depots/$id'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -135,6 +137,16 @@ const AppClientsIdRoute = AppClientsIdRouteImport.update({
   path: '/clients/$id',
   getParentRoute: () => AppRoute,
 } as any)
+const AppDepotsIndexRoute = AppDepotsIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AppDepotsRoute,
+} as any)
+const AppDepotsIdRoute = AppDepotsIdRouteImport.update({
+  id: '/$id',
+  path: '/$id',
+  getParentRoute: () => AppDepotsRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -148,7 +160,7 @@ export interface FileRoutesByFullPath {
   '/commandes': typeof AppCommandesRoute
   '/comptoir': typeof AppComptoirRoute
   '/depenses': typeof AppDepensesRoute
-  '/depots': typeof AppDepotsRoute
+  '/depots': typeof AppDepotsRouteWithChildren
   '/equipe': typeof AppEquipeRoute
   '/livraisons': typeof AppLivraisonsRoute
   '/parametres': typeof AppParametresRoute
@@ -156,7 +168,9 @@ export interface FileRoutesByFullPath {
   '/stock': typeof AppStockRoute
   '/tableau-de-bord': typeof AppTableauDeBordRoute
   '/clients/$id': typeof AppClientsIdRoute
+  '/depots/$id': typeof AppDepotsIdRoute
   '/clients/': typeof AppClientsIndexRoute
+  '/depots/': typeof AppDepotsIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -170,7 +184,6 @@ export interface FileRoutesByTo {
   '/commandes': typeof AppCommandesRoute
   '/comptoir': typeof AppComptoirRoute
   '/depenses': typeof AppDepensesRoute
-  '/depots': typeof AppDepotsRoute
   '/equipe': typeof AppEquipeRoute
   '/livraisons': typeof AppLivraisonsRoute
   '/parametres': typeof AppParametresRoute
@@ -178,7 +191,9 @@ export interface FileRoutesByTo {
   '/stock': typeof AppStockRoute
   '/tableau-de-bord': typeof AppTableauDeBordRoute
   '/clients/$id': typeof AppClientsIdRoute
+  '/depots/$id': typeof AppDepotsIdRoute
   '/clients': typeof AppClientsIndexRoute
+  '/depots': typeof AppDepotsIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -194,7 +209,7 @@ export interface FileRoutesById {
   '/_app/commandes': typeof AppCommandesRoute
   '/_app/comptoir': typeof AppComptoirRoute
   '/_app/depenses': typeof AppDepensesRoute
-  '/_app/depots': typeof AppDepotsRoute
+  '/_app/depots': typeof AppDepotsRouteWithChildren
   '/_app/equipe': typeof AppEquipeRoute
   '/_app/livraisons': typeof AppLivraisonsRoute
   '/_app/parametres': typeof AppParametresRoute
@@ -202,7 +217,9 @@ export interface FileRoutesById {
   '/_app/stock': typeof AppStockRoute
   '/_app/tableau-de-bord': typeof AppTableauDeBordRoute
   '/_app/clients/$id': typeof AppClientsIdRoute
+  '/_app/depots/$id': typeof AppDepotsIdRoute
   '/_app/clients/': typeof AppClientsIndexRoute
+  '/_app/depots/': typeof AppDepotsIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -226,7 +243,9 @@ export interface FileRouteTypes {
     | '/stock'
     | '/tableau-de-bord'
     | '/clients/$id'
+    | '/depots/$id'
     | '/clients/'
+    | '/depots/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -240,7 +259,6 @@ export interface FileRouteTypes {
     | '/commandes'
     | '/comptoir'
     | '/depenses'
-    | '/depots'
     | '/equipe'
     | '/livraisons'
     | '/parametres'
@@ -248,7 +266,9 @@ export interface FileRouteTypes {
     | '/stock'
     | '/tableau-de-bord'
     | '/clients/$id'
+    | '/depots/$id'
     | '/clients'
+    | '/depots'
   id:
     | '__root__'
     | '/'
@@ -271,7 +291,9 @@ export interface FileRouteTypes {
     | '/_app/stock'
     | '/_app/tableau-de-bord'
     | '/_app/clients/$id'
+    | '/_app/depots/$id'
     | '/_app/clients/'
+    | '/_app/depots/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -433,8 +455,36 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppClientsIdRouteImport
       parentRoute: typeof AppRoute
     }
+    '/_app/depots/': {
+      id: '/_app/depots/'
+      path: '/'
+      fullPath: '/depots/'
+      preLoaderRoute: typeof AppDepotsIndexRouteImport
+      parentRoute: typeof AppDepotsRoute
+    }
+    '/_app/depots/$id': {
+      id: '/_app/depots/$id'
+      path: '/$id'
+      fullPath: '/depots/$id'
+      preLoaderRoute: typeof AppDepotsIdRouteImport
+      parentRoute: typeof AppDepotsRoute
+    }
   }
 }
+
+interface AppDepotsRouteChildren {
+  AppDepotsIdRoute: typeof AppDepotsIdRoute
+  AppDepotsIndexRoute: typeof AppDepotsIndexRoute
+}
+
+const AppDepotsRouteChildren: AppDepotsRouteChildren = {
+  AppDepotsIdRoute: AppDepotsIdRoute,
+  AppDepotsIndexRoute: AppDepotsIndexRoute,
+}
+
+const AppDepotsRouteWithChildren = AppDepotsRoute._addFileChildren(
+  AppDepotsRouteChildren,
+)
 
 interface AppRouteChildren {
   AppCaisseRoute: typeof AppCaisseRoute
@@ -442,7 +492,7 @@ interface AppRouteChildren {
   AppCommandesRoute: typeof AppCommandesRoute
   AppComptoirRoute: typeof AppComptoirRoute
   AppDepensesRoute: typeof AppDepensesRoute
-  AppDepotsRoute: typeof AppDepotsRoute
+  AppDepotsRoute: typeof AppDepotsRouteWithChildren
   AppEquipeRoute: typeof AppEquipeRoute
   AppLivraisonsRoute: typeof AppLivraisonsRoute
   AppParametresRoute: typeof AppParametresRoute
@@ -459,7 +509,7 @@ const AppRouteChildren: AppRouteChildren = {
   AppCommandesRoute: AppCommandesRoute,
   AppComptoirRoute: AppComptoirRoute,
   AppDepensesRoute: AppDepensesRoute,
-  AppDepotsRoute: AppDepotsRoute,
+  AppDepotsRoute: AppDepotsRouteWithChildren,
   AppEquipeRoute: AppEquipeRoute,
   AppLivraisonsRoute: AppLivraisonsRoute,
   AppParametresRoute: AppParametresRoute,

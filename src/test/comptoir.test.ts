@@ -79,3 +79,11 @@ describe("numérotation", () => {
     expect(etiquettesParLigne("A-B2-0001", [1])[0]?.resume).toBe("A-B2-0001-1/1");
   });
 });
+
+describe("scan d'étiquette", () => {
+  it("retrouve le numéro du dépôt depuis une étiquette", async () => {
+    const { numeroDepuisScan } = await import("@/hooks/useDepots");
+    expect(numeroDepuisScan("a-b2-0043-2/5")).toBe("A-B2-0043");
+    expect(numeroDepuisScan("A-B2-0043")).toBe("A-B2-0043");
+  });
+});
