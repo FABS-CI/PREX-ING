@@ -2366,6 +2366,41 @@ export type Database = {
         }
         Returns: string
       }
+      avancer_livraison: {
+        Args: {
+          p_livraison: string
+          p_motif?: string
+          p_statut: Database["public"]["Enums"]["statut_livraison"]
+        }
+        Returns: {
+          adresse: string
+          boutique_id: string
+          client_id: string
+          code_confirmation: string | null
+          created_at: string
+          creneau_debut: string | null
+          creneau_fin: string | null
+          deleted_at: string | null
+          depot_id: string | null
+          frais: number
+          id: string
+          livreur_id: string | null
+          motif_echec: string | null
+          pressing_id: string
+          preuve_url: string | null
+          repere: string | null
+          statut: Database["public"]["Enums"]["statut_livraison"]
+          type: Database["public"]["Enums"]["type_livraison"]
+          updated_at: string
+          zone_id: string | null
+        }
+        SetofOptions: {
+          from: "*"
+          to: "livraisons"
+          isOneToOne: true
+          isSetofReturn: false
+        }
+      }
       caisse_theorique: { Args: { p_session: string }; Returns: number }
       can_access: {
         Args: { p_boutique: string; p_pressing: string }
@@ -2459,7 +2494,48 @@ export type Database = {
           isSetofReturn: false
         }
       }
+      peut_gerer_livraison: {
+        Args: { l: Database["public"]["Tables"]["livraisons"]["Row"] }
+        Returns: boolean
+      }
       pointer: { Args: { p_pressing: string }; Returns: Json }
+      terminer_livraison: {
+        Args: {
+          p_code?: string
+          p_livraison: string
+          p_montant?: number
+          p_moyen?: Database["public"]["Enums"]["moyen_paiement"]
+          p_reference?: string
+        }
+        Returns: {
+          adresse: string
+          boutique_id: string
+          client_id: string
+          code_confirmation: string | null
+          created_at: string
+          creneau_debut: string | null
+          creneau_fin: string | null
+          deleted_at: string | null
+          depot_id: string | null
+          frais: number
+          id: string
+          livreur_id: string | null
+          motif_echec: string | null
+          pressing_id: string
+          preuve_url: string | null
+          repere: string | null
+          statut: Database["public"]["Enums"]["statut_livraison"]
+          type: Database["public"]["Enums"]["type_livraison"]
+          updated_at: string
+          zone_id: string | null
+        }
+        SetofOptions: {
+          from: "*"
+          to: "livraisons"
+          isOneToOne: true
+          isSetofReturn: false
+        }
+      }
     }
     Enums: {
       canal_message: "whatsapp" | "sms"
