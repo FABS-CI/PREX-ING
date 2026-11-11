@@ -48,3 +48,15 @@ describe("salaires", () => {
     expect([r.salaires, r.benefice]).toEqual([47692, 32308]);
   });
 });
+
+describe("livraisons", () => {
+  it("frais de zone, gratuité, code et itinéraire", async () => {
+    const { fraisPour, nouveauCode, lienItineraire } = await import("@/hooks/useLivraisons");
+    const zone = { id: "z", nom: "Cocody", communes: [], frais: 1000, seuil_gratuite: 15000 };
+    expect([fraisPour(zone, 14999), fraisPour(zone, 15000), fraisPour(undefined, 0)]).toEqual([
+      1000, 0, 0,
+    ]);
+    expect(nouveauCode()).toMatch(/^[1-9]\d{3}$/);
+    expect(lienItineraire("Angré 8e tranche")).toContain("destination=Angr%C3%A9%208e%20tranche");
+  });
+});
