@@ -8,6 +8,13 @@ export function messageErreur(err: unknown): string {
   const e = (err ?? {}) as ErreurLike;
   const msg = e.message ?? "";
   if (e.code === "23505") return "Cet enregistrement existe déjà.";
+  // Messages métier levés par la base (règles PREX'ING) : on les affiche tels quels.
+  if (
+    (e.code === "42501" || e.code === "22023" || e.code === "P0001" || e.code === "P0002") &&
+    msg &&
+    !/row-level security|permission denied/i.test(msg)
+  )
+    return msg;
   if (e.code === "42501" || /row-level security/i.test(msg))
     return "Vous n'avez pas les droits pour cette action.";
   if (/Failed to fetch|NetworkError|network/i.test(msg))

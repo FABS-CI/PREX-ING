@@ -87,3 +87,34 @@ describe("scan d'étiquette", () => {
     expect(numeroDepuisScan("A-B2-0043")).toBe("A-B2-0043");
   });
 });
+
+describe("caisse", () => {
+  it("calcule les espèces attendues (scénario 9)", async () => {
+    const { calculerResume } = await import("@/hooks/useCaisse");
+    const r = calculerResume(
+      5000,
+      [
+        { moyen: "especes", statut: "valide", montant: 3000 },
+        { moyen: "especes", statut: "annule", montant: 9999 },
+        { moyen: "wave", statut: "a_verifier", montant: 2000 },
+        { moyen: "wave", statut: "valide", montant: 1500 },
+      ],
+      [
+        { type: "sortie", montant: 1000 },
+        { type: "entree", montant: 500 },
+      ],
+    );
+    expect(r.theorique).toBe(7500);
+    expect(r.parMoyen.find((m) => m.moyen === "wave")).toEqual({
+      moyen: "wave",
+      valide: 1500,
+      aVerifier: 2000,
+      nombre: 2,
+    });
+  });
+
+  it("additionne le comptage par coupures", async () => {
+    const { totalCoupures } = await import("@/components/caisse/Comptage");
+    expect(totalCoupures({ 10000: 2, 500: 3, 25: 4 })).toBe(21600);
+  });
+});
