@@ -2,10 +2,22 @@
  * Calculs du comptoir. Ces montants servent à l'affichage pendant la saisie ;
  * les montants officiels du dépôt sont recalculés par la base (triggers).
  */
-import { ajouterJours } from "./format";
+import { ajouterJours, formatFCFA } from "./format";
+
+export type TypeLigne = "article" | "kilo" | "lot";
 
 export interface LignePanier {
   cle: string;
+  /** article (défaut) ; kilo : poids × prix au kg ; lot : forfait à prix fixe. */
+  type?: TypeLigne;
+  /** Mode kilo : poids pesé et poids minimum facturé. */
+  poidsKg?: number;
+  poidsMinKg?: number;
+  /** Forfait : prix du lot et identifiant. */
+  prixLot?: number;
+  forfaitId?: string;
+  /** Pièces incluses dans l'abonnement du client (facturées 0). */
+  couvert?: boolean;
   articleId: string;
   serviceId: string;
   articleNom: string;
@@ -27,11 +39,64 @@ export function prixExpress(prix: number, majorationPct: number): number {
 }
 
 export function prixUnitaire(l: LignePanier, express: boolean): number {
+  if (l.type === "lot") return 0;
   return express ? prixExpress(l.prixBase, l.majorationExpressPct) : l.prixBase;
 }
 
+/** Poids facturé : poids pesé, au moins le minimum (scénario 6 : 4,5 kg, minimum 5 → 5 kg). */
+export function poidsFacture(l: Pick<LignePanier, "poidsKg" | "poidsMinKg">): number {
+  const p = Math.max(l.poidsKg ?? 0, l.poidsMinKg ?? 0);
+  return Math.round(p * 100) / 100;
+}
+
 export function totalLigne(l: LignePanier, express: boolean): number {
+  if (l.couvert) return 0;
+  if (l.type === "lot") return l.prixLot ?? 0;
+  if (l.type === "kilo") return Math.round(prixUnitaire(l, express) * poidsFacture(l));
   return prixUnitaire(l, express) * l.quantite;
+}
+
+/**
+ * Abonnement : les `couvert` premières pièces (lignes à l'article seulement) deviennent
+ * « incluses » (0 FCFA) ; le reste est facturé au tarif normal (scénario 7 : 22 pièces, quota 20).
+ */
+export function repartirAbonnement(lignes: LignePanier[], couvert: number): LignePanier[] {
+  let reste = Math.max(0, couvert);
+  const r: LignePanier[] = [];
+  for (const l of lignes) {
+    if ((l.type ?? "article") !== "article" || l.couvert || reste === 0) {
+      r.push(l);
+      continue;
+    }
+    const pris = Math.min(reste, l.quantite);
+    reste -= pris;
+    r.push({ ...l, cle: `${l.cle}#abo`, quantite: pris, couvert: true });
+    if (l.quantite > pris) r.push({ ...l, quantite: l.quantite - pris });
+  }
+  return r;
+}
+
+export function piecesArticle(lignes: LignePanier[]): number {
+  return lignes
+    .filter((l) => (l.type ?? "article") === "article" && !l.couvert)
+    .reduce((a, l) => a + l.quantite, 0);
+}
+
+/** Détail d'une ligne enregistrée, pour le ticket et la fiche du dépôt. */
+export function detailLigne(l: {
+  quantite: number;
+  prix_unitaire: number;
+  poids_kg?: number | null;
+  prix_lot?: number | null;
+  couvert_abonnement?: boolean | null;
+}): string {
+  const f = (n: number) => formatFCFA(n, false);
+  if (l.couvert_abonnement)
+    return `${l.quantite} pièce${l.quantite > 1 ? "s" : ""} incluse${l.quantite > 1 ? "s" : ""} dans l’abonnement`;
+  if (l.prix_lot != null) return `Lot de ${l.quantite} pièce${l.quantite > 1 ? "s" : ""}`;
+  if (l.poids_kg != null)
+    return `${String(l.poids_kg).replace(".", ",")} kg × ${f(l.prix_unitaire)} · ${l.quantite} pièce${l.quantite > 1 ? "s" : ""}`;
+  return `${l.quantite} × ${f(l.prix_unitaire)}`;
 }
 
 export function sousTotal(lignes: LignePanier[], express: boolean): number {

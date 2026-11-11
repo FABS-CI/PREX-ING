@@ -118,3 +118,27 @@ describe("caisse", () => {
     expect(totalCoupures({ 10000: 2, 500: 3, 25: 4 })).toBe(21600);
   });
 });
+
+describe("modes avancés", () => {
+  it("scénario 6 : 4,5 kg avec minimum 5 kg → 5 kg facturés", async () => {
+    const { poidsFacture, totalLigne } = await import("@/lib/comptoir");
+    expect(poidsFacture({ poidsKg: 4.5, poidsMinKg: 5 })).toBe(5);
+    expect(poidsFacture({ poidsKg: 6.25, poidsMinKg: 5 })).toBe(6.25);
+    expect(
+      totalLigne(ligne({ type: "kilo", poidsKg: 4.5, poidsMinKg: 5, prixBase: 800 }), false),
+    ).toBe(4000);
+    expect(totalLigne(ligne({ type: "lot", prixLot: 8000, quantite: 10 }), true)).toBe(8000);
+  });
+
+  it("scénario 7 : quota de 20, 22 pièces → 20 incluses, 2 facturées", async () => {
+    const { repartirAbonnement, sousTotal, piecesArticle } = await import("@/lib/comptoir");
+    const lignes = [
+      ligne({ cle: "a", quantite: 15 }),
+      ligne({ cle: "b", quantite: 7, prixBase: 1500 }),
+    ];
+    expect(piecesArticle(lignes)).toBe(22);
+    const r = repartirAbonnement(lignes, 20);
+    expect(r.filter((l) => l.couvert).reduce((a, l) => a + l.quantite, 0)).toBe(20);
+    expect(sousTotal(r, false)).toBe(2 * 1500);
+  });
+});

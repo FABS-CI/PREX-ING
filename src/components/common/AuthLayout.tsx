@@ -1,7 +1,7 @@
 import type { ReactNode } from "react";
 
 import { Logo } from "./Logo";
-const supabaseConfigured = Boolean(import.meta.env['VITE_SUPABASE_URL']);
+const supabaseConfigured = Boolean(import.meta.env["VITE_SUPABASE_URL"]);
 
 export function AuthLayout({
   titre,

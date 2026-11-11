@@ -16,6 +16,8 @@ import { Switch } from "@/components/ui/switch";
 import { Textarea } from "@/components/ui/textarea";
 import {
   depassePlafond,
+  poidsFacture,
+  repartirAbonnement,
   libelleLigne,
   montantRemise,
   nombrePieces,
@@ -62,6 +64,8 @@ interface Props {
   enCours: boolean;
   onValider: () => void;
   messageBlocage: string | null;
+  /** Pièces que l’abonnement du client couvrira (mode abonnement). */
+  couvert?: number;
 }
 
 function Entier({
@@ -162,9 +166,12 @@ export function Panier({
   enCours,
   onValider,
   messageBlocage,
+  couvert = 0,
 }: Props) {
   const [obs, setObs] = useState<string | null>(null);
-  const st = sousTotal(lignes, etat.express);
+  const lignesCalcul = couvert > 0 ? repartirAbonnement(lignes, couvert) : lignes;
+  const st = sousTotal(lignesCalcul, etat.express);
+  const valeurIncluse = sousTotal(lignes, etat.express) - st;
   const remise = montantRemise(st, etat.typeRemise, etat.valeurRemise);
   const net = st - remise;
   const avance = Math.min(etat.avance, net);
@@ -205,8 +212,24 @@ export function Panier({
                   <div className="min-w-0">
                     <p className="truncate text-sm font-medium">{l.articleNom}</p>
                     <p className="text-xs text-muted-foreground">
-                      {l.serviceNom} ·{" "}
-                      <span className="montant">{formatFCFA(prixUnitaire(l, etat.express))}</span>
+                      {l.type === "kilo" ? (
+                        <>
+                          {l.serviceNom} · {String(poidsFacture(l)).replace(".", ",")} kg facturés
+                          {(l.poidsKg ?? 0) < (l.poidsMinKg ?? 0) ? " (minimum)" : ""} ·{" "}
+                          <span className="montant">
+                            {formatFCFA(prixUnitaire(l, etat.express))}/kg
+                          </span>
+                        </>
+                      ) : l.type === "lot" ? (
+                        <>Forfait · {l.quantite} pièces</>
+                      ) : (
+                        <>
+                          {l.serviceNom} ·{" "}
+                          <span className="montant">
+                            {formatFCFA(prixUnitaire(l, etat.express))}
+                          </span>
+                        </>
+                      )}
                     </p>
                   </div>
                   <p className="montant text-sm font-semibold">
@@ -217,25 +240,33 @@ export function Panier({
                   <p className="mt-1 text-xs text-warning">{l.observations}</p>
                 ) : null}
                 <div className="mt-2 flex items-center gap-1">
-                  <Button
-                    variant="outline"
-                    size="icon"
-                    className="size-9"
-                    onClick={() => onQuantite(l.cle, -1)}
-                    aria-label="Retirer une pièce"
-                  >
-                    <Minus />
-                  </Button>
-                  <span className="montant w-9 text-center font-semibold">{l.quantite}</span>
-                  <Button
-                    variant="outline"
-                    size="icon"
-                    className="size-9"
-                    onClick={() => onQuantite(l.cle, 1)}
-                    aria-label="Ajouter une pièce"
-                  >
-                    <Plus />
-                  </Button>
+                  {l.type === "kilo" || l.type === "lot" ? (
+                    <span className="text-xs text-muted-foreground">
+                      {l.quantite} pièce{l.quantite > 1 ? "s" : ""}
+                    </span>
+                  ) : (
+                    <>
+                      <Button
+                        variant="outline"
+                        size="icon"
+                        className="size-9"
+                        onClick={() => onQuantite(l.cle, -1)}
+                        aria-label="Retirer une pièce"
+                      >
+                        <Minus />
+                      </Button>
+                      <span className="montant w-9 text-center font-semibold">{l.quantite}</span>
+                      <Button
+                        variant="outline"
+                        size="icon"
+                        className="size-9"
+                        onClick={() => onQuantite(l.cle, 1)}
+                        aria-label="Ajouter une pièce"
+                      >
+                        <Plus />
+                      </Button>
+                    </>
+                  )}
                   <Button
                     variant="ghost"
                     size="sm"
@@ -393,8 +424,16 @@ export function Panier({
         <dl className="space-y-1 border-t pt-3 text-sm">
           <div className="flex justify-between">
             <dt className="text-muted-foreground">Sous-total</dt>
-            <dd className="montant">{formatFCFA(st)}</dd>
+            <dd className="montant">{formatFCFA(st + valeurIncluse)}</dd>
           </div>
+          {valeurIncluse > 0 ? (
+            <div className="flex justify-between text-success">
+              <dt>
+                {couvert} pièce{couvert > 1 ? "s" : ""} incluse{couvert > 1 ? "s" : ""} (abonnement)
+              </dt>
+              <dd className="montant">−{formatFCFA(valeurIncluse)}</dd>
+            </div>
+          ) : null}
           {remise > 0 ? (
             <div className="flex justify-between">
               <dt className="text-muted-foreground">Remise</dt>

@@ -8,6 +8,11 @@ import { Chargement } from "@/components/common/Chargement";
 import { ChoixClient, type ClientChoisi } from "@/components/comptoir/ChoixClient";
 import { Confirmation } from "@/components/comptoir/Confirmation";
 import { GrilleArticles } from "@/components/comptoir/GrilleArticles";
+import {
+  BandeauAbonnement,
+  PanneauForfaits,
+  PanneauKilo,
+} from "@/components/comptoir/PanneauxModes";
 import { ZoneImpression, type ContenuImpression } from "@/components/comptoir/Impression";
 import { Panier, type EtatPaiement } from "@/components/comptoir/Panier";
 import {
@@ -26,12 +31,15 @@ import { useEspace } from "@/contexts/SessionContext";
 import { useCatalogue } from "@/hooks/useCatalogue";
 import { useSessionOuverte } from "@/hooks/useCaisse";
 import { useClient } from "@/hooks/useClients";
+import { useAbonnementActif, useForfaits, usePrixKilo } from "@/hooks/useModesAvances";
 import { modeleMessage, useCreerDepot, type DepotCree } from "@/hooks/useCreerDepot";
 import {
   dateRetraitPrevue,
   depassePlafond,
   montantRemise,
   nombrePieces,
+  piecesArticle,
+  repartirAbonnement,
   sousTotal,
   type LignePanier,
 } from "@/lib/comptoir";
@@ -89,6 +97,10 @@ function Comptoir() {
   const [impression, setImpression] = useState<ContenuImpression | null>(null);
   const rechercheRef = useRef<HTMLInputElement>(null);
   const caisse = useSessionOuverte(boutique.id);
+  const [mode, setMode] = useState<ModeFacturation>("article");
+  const prixKilo = usePrixKilo(pressing.id);
+  const forfaits = useForfaits(pressing.id);
+  const abonnement = useAbonnementActif(client?.id);
 
   // Client passé dans l'adresse (bouton « Nouveau dépôt » d'une fiche client).
   const ficheParam = useClient(clientParam);
@@ -130,7 +142,11 @@ function Comptoir() {
     return m;
   }, [lignes]);
 
-  const st = sousTotal(lignes, paiement.express);
+  const abo = mode === "abonnement" ? (abonnement.data ?? null) : null;
+  const couvert = abo
+    ? Math.min(Math.max(0, (abo.quota_pieces ?? 0) - abo.consomme_pieces), piecesArticle(lignes))
+    : 0;
+  const st = sousTotal(couvert ? repartirAbonnement(lignes, couvert) : lignes, paiement.express);
   const remise = montantRemise(st, paiement.typeRemise, paiement.valeurRemise);
   const net = st - remise;
   const pieces = nombrePieces(lignes);
@@ -138,6 +154,7 @@ function Comptoir() {
   let blocage: string | null = null;
   if (!client) blocage = "Choisissez d’abord le client.";
   else if (lignes.length === 0) blocage = "Ajoutez au moins un article.";
+  else if (mode === "abonnement" && !abo) blocage = "Ce client n’a pas d’abonnement actif.";
   else if (paiement.avance > net) blocage = "L’avance dépasse le net à payer.";
   else if (paiement.avance > 0 && paiement.moyen !== "especes" && !paiement.reference.trim())
     blocage = "Saisissez la référence de la transaction mobile money.";
@@ -148,6 +165,7 @@ function Comptoir() {
     setLignes([]);
     setPaiement(etatInitial());
     setDateManuelle(false);
+    setMode("article");
     setResultat(null);
     setPanierMobile(false);
     if (clientParam) void navigate({ to: "/comptoir", search: {}, replace: true });
@@ -171,6 +189,9 @@ function Comptoir() {
         avance: paiement.avance,
         moyen: paiement.moyen,
         reference: paiement.reference,
+        mode,
+        abonnementId: abo?.id ?? null,
+        forfaitId: lignes.find((l) => l.type === "lot")?.forfaitId ?? null,
       });
       let whatsapp: string | null = null;
       if (ficheClient.data?.client?.consentement_messages) {
@@ -301,6 +322,7 @@ function Comptoir() {
       enCours={creerDepot.isPending}
       onValider={() => void valider()}
       messageBlocage={blocage}
+      couvert={couvert}
     />
   );
 
@@ -329,60 +351,80 @@ function Comptoir() {
           role="radiogroup"
           aria-label="Mode de facturation"
         >
-          {MODES.map((m) => {
-            const dispo = m.id === "article";
-            return (
-              <button
-                key={m.id}
-                type="button"
-                role="radio"
-                aria-checked={m.id === "article"}
-                disabled={!dispo}
-                title={dispo ? undefined : "Bientôt disponible"}
-                className={cn(
-                  "h-9 shrink-0 rounded-lg px-3 text-sm font-medium",
-                  dispo
-                    ? "bg-secondary text-secondary-foreground ring-1 ring-primary/30"
-                    : "cursor-not-allowed text-muted-foreground/70",
-                )}
-              >
-                {m.libelle}
-                {!dispo ? <span className="ml-1 text-xs">· bientôt</span> : null}
-              </button>
-            );
-          })}
+          {MODES.map((m) => (
+            <button
+              key={m.id}
+              type="button"
+              role="radio"
+              aria-checked={mode === m.id}
+              onClick={() => setMode(m.id)}
+              className={cn(
+                "h-10 shrink-0 rounded-lg px-4 text-sm font-medium transition-colors",
+                mode === m.id
+                  ? "bg-primary text-primary-foreground"
+                  : "bg-secondary text-secondary-foreground hover:bg-secondary/70",
+              )}
+            >
+              {m.libelle}
+            </button>
+          ))}
         </div>
 
-        <GrilleArticles
-          catalogue={catalogue.data}
-          boutiqueId={boutique.id}
-          serviceId={serviceId}
-          onService={setServiceId}
-          quantites={quantites}
-          onAjouter={(article, service, prix) => {
-            setLignes((ls) => {
-              const cle = `${article.id}|${service.id}`;
-              const existe = ls.find((l) => l.cle === cle);
-              if (existe)
-                return ls.map((l) => (l.cle === cle ? { ...l, quantite: l.quantite + 1 } : l));
-              return [
-                ...ls,
-                {
-                  cle,
-                  articleId: article.id,
-                  serviceId: service.id,
-                  articleNom: article.nom,
-                  serviceNom: service.nom,
-                  quantite: 1,
-                  prixBase: prix,
-                  majorationExpressPct: service.majoration_express_pct,
-                  delaiJours: service.delai_jours,
-                  observations: "",
-                },
-              ];
-            });
-          }}
-        />
+        {mode === "abonnement" ? (
+          <BandeauAbonnement
+            abonnement={abonnement.data}
+            chargement={abonnement.isLoading}
+            clientId={client?.id}
+            couvert={couvert}
+          />
+        ) : null}
+        {mode === "kilo" ? (
+          <PanneauKilo
+            catalogue={catalogue.data}
+            prixKilo={prixKilo.data ?? []}
+            boutiqueId={boutique.id}
+            onAjouter={(l) => setLignes((ls) => [...ls, l])}
+          />
+        ) : null}
+        {mode === "forfait" ? (
+          <PanneauForfaits
+            catalogue={catalogue.data}
+            forfaits={forfaits.data ?? []}
+            onAjouter={(l) => setLignes((ls) => [...ls, l])}
+          />
+        ) : null}
+        {mode === "article" || mode === "abonnement" ? (
+          <GrilleArticles
+            catalogue={catalogue.data}
+            boutiqueId={boutique.id}
+            serviceId={serviceId}
+            onService={setServiceId}
+            quantites={quantites}
+            onAjouter={(article, service, prix) => {
+              setLignes((ls) => {
+                const cle = `${article.id}|${service.id}`;
+                const existe = ls.find((l) => l.cle === cle);
+                if (existe)
+                  return ls.map((l) => (l.cle === cle ? { ...l, quantite: l.quantite + 1 } : l));
+                return [
+                  ...ls,
+                  {
+                    cle,
+                    articleId: article.id,
+                    serviceId: service.id,
+                    articleNom: article.nom,
+                    serviceNom: service.nom,
+                    quantite: 1,
+                    prixBase: prix,
+                    majorationExpressPct: service.majoration_express_pct,
+                    delaiJours: service.delai_jours,
+                    observations: "",
+                  },
+                ];
+              });
+            }}
+          />
+        ) : null}
       </div>
 
       {/* Ordinateur / tablette : panier fixe à droite */}
