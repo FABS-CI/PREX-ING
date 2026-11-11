@@ -2340,6 +2340,7 @@ export type Database = {
       }
     }
     Functions: {
+      caisse_theorique: { Args: { p_session: string }; Returns: number }
       can_access: {
         Args: { p_boutique: string; p_pressing: string }
         Returns: boolean
@@ -2347,6 +2348,36 @@ export type Database = {
       can_operate: {
         Args: { p_boutique: string; p_pressing: string }
         Returns: boolean
+      }
+      cloturer_caisse: {
+        Args: {
+          p_commentaire?: string
+          p_montant_compte: number
+          p_session: string
+        }
+        Returns: {
+          boutique_id: string
+          cloture_le: string | null
+          cloture_par: string | null
+          commentaire: string | null
+          created_at: string
+          ecart: number | null
+          fond_initial: number
+          id: string
+          montant_compte: number | null
+          montant_theorique: number | null
+          ouvert_le: string
+          ouvert_par: string | null
+          pressing_id: string
+          statut: string
+          updated_at: string
+        }
+        SetofOptions: {
+          from: "*"
+          to: "sessions_caisse"
+          isOneToOne: true
+          isSetofReturn: false
+        }
       }
       creer_pressing: {
         Args: {
