@@ -15,6 +15,13 @@
       "when": 1794404793585,
       "tag": "0001_modes_avances",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1794410824123,
+      "tag": "0002_depenses_caisse",
+      "breakpoints": true
     }
   ]
 }
