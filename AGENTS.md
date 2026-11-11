@@ -38,3 +38,4 @@ use the editor.
 - Advanced billing uses shared cart calculations and mode-specific catalogue/counter modules, while database triggers remain authoritative for saved line totals, to keep previews and stored deposits consistent.
 - Management screens share browser-side queries and report calculations; cash expenses create cash movements through database triggers rather than UI inserts, preventing duplicate withdrawals.
 - Team screens use shared salary calculations for previews; membership assignment, self-attendance and salary payment use database functions so privileged operations are checked at the database boundary.
+- Delivery screens use shared zone pricing and browser queries; delivery status changes and completion use database functions that validate course access, while deposit totals remain trigger-computed.

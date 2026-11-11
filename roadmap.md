@@ -1,3 +1,9 @@
+## Équipe et Livraisons
+- [x] Importer les quinze fichiers à l’identique et supprimer les deux archives.
+- [x] Vérifier la migration Équipe déjà appliquée, appliquer Livraisons à l’identique et régénérer les types.
+- [x] Vérifier les 35 tests et le contrôle automatique sans erreur, sans corriger les fichiers reçus.
+- [x] Créer Cocody à 1 000 FCFA, programmer une livraison du dépôt d’essai A-U1-0001 et vérifier le code à quatre chiffres et le reste passant de 500 à 1 500 FCFA, relu après rechargement.
+
 ## Modes avancés
 - [x] Importer les 16 fichiers de Claude à l’identique et supprimer l’archive.
 - [x] Appliquer le SQL fourni à l’identique et régénérer les types.

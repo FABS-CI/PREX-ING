@@ -9,6 +9,7 @@ import {
   PackageCheck,
   Printer,
   RotateCw,
+  Truck,
   Tag,
   Zap,
 } from "lucide-react";
@@ -22,6 +23,7 @@ import {
 import { Chargement } from "@/components/common/Chargement";
 import { ZoneImpression, type ContenuImpression } from "@/components/comptoir/Impression";
 import { DialogueAnnuler, DialogueEncaisser, DialogueRetrait } from "@/components/depots/Dialogues";
+import { DialogueCourse } from "@/components/livraisons/Dialogues";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -62,7 +64,7 @@ export const Route = createFileRoute("/_app/depots/$id")({
   component: FicheDepot,
 });
 
-type Dialogue = "encaisser" | "retrait" | "annuler" | null;
+type Dialogue = "encaisser" | "retrait" | "annuler" | "livraison" | null;
 
 function FicheDepot() {
   const { id } = Route.useParams();
@@ -217,6 +219,12 @@ function FicheDepot() {
             <Button variant="outline" className="h-11" onClick={() => setDialogue("encaisser")}>
               <HandCoins />
               Encaisser
+            </Button>
+          ) : null}
+          {d.statut === "pret" && c ? (
+            <Button variant="outline" className="h-11" onClick={() => setDialogue("livraison")}>
+              <Truck />
+              Programmer une livraison
             </Button>
           ) : null}
           {!clos && d.statut !== "en_attente" ? (
@@ -410,6 +418,20 @@ function FicheDepot() {
           peutForcer={gestion}
           onFermer={() => setDialogue(null)}
           onEncaisser={() => setDialogue("encaisser")}
+        />
+      ) : null}
+      {dialogue === "livraison" && c ? (
+        <DialogueCourse
+          type="livraison"
+          depot={{ id: d.id, numero: d.numero, net_a_payer: d.net_a_payer - d.frais_livraison }}
+          clientInitial={{
+            id: c.id,
+            nom: c.nom,
+            telephone: c.telephone,
+            solde_du: 0,
+            consentement_messages: c.consentement_messages,
+          }}
+          onFermer={() => setDialogue(null)}
         />
       ) : null}
       {dialogue === "annuler" ? (
