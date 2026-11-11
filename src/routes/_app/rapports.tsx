@@ -93,7 +93,8 @@ function sections(r: Rapport): Section[] {
         ["Encaissements validés", r.encaissements],
         ["Mobile money à vérifier", r.aVerifier],
         ["Dépenses", r.depenses],
-        ["Bénéfice simplifié (encaissements − dépenses)", r.benefice],
+        ["Salaires payés", r.salaires],
+        ["Bénéfice simplifié (encaissements − dépenses − salaires)", r.benefice],
       ],
     },
     t("Encaissements par moyen de paiement", r.parMoyen, "Paiements"),
@@ -215,8 +216,14 @@ function RapportsPage() {
                     ? `+ ${formatFCFA(data.aVerifier)} à vérifier`
                     : "paiements validés",
                 ],
-                ["Dépenses", formatFCFA(data.depenses), "sur la période"],
-                ["Bénéfice simplifié", formatFCFA(data.benefice), "encaissé − dépenses"],
+                [
+                  "Dépenses et salaires",
+                  formatFCFA(data.depenses + data.salaires),
+                  data.salaires
+                    ? `dont ${formatFCFA(data.salaires)} de salaires`
+                    : "sur la période",
+                ],
+                ["Bénéfice simplifié", formatFCFA(data.benefice), "encaissé − dépenses − salaires"],
               ].map(([l, v, d], i) => (
                 <div key={l} className="px-5 py-4">
                   <p className="text-xs text-muted-foreground">{l}</p>
@@ -291,9 +298,6 @@ function RapportsPage() {
               colonneNombre="pièces"
             />
           </div>
-          <p className="text-xs text-muted-foreground">
-            Les salaires seront déduits du bénéfice quand le module Équipe sera en place.
-          </p>
         </div>
       ) : null}
     </>

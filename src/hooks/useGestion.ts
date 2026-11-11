@@ -326,6 +326,7 @@ export interface Rapport {
   encaissements: number;
   aVerifier: number;
   depenses: number;
+  salaires: number;
   benefice: number;
   parMoyen: LigneRapport[];
   parService: LigneRapport[];
@@ -390,10 +391,12 @@ export function calculerRapport(
   depenses: DepenseR[],
   jours: string[],
   libelleMoyen: (m: MoyenPaiement) => string,
+  salaires: { net: number }[] = [],
 ): Rapport {
   const valides = paiements.filter((p) => p.statut === "valide");
   const encaissements = valides.reduce((a, p) => a + p.montant, 0);
   const totalDepenses = depenses.reduce((a, d) => a + d.montant, 0);
+  const totalSalaires = salaires.reduce((a, x) => a + x.net, 0);
   const jourDe = (iso: string) => {
     const d = new Date(iso);
     return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
@@ -407,7 +410,8 @@ export function calculerRapport(
       .filter((p) => p.statut === "a_verifier")
       .reduce((a, p) => a + p.montant, 0),
     depenses: totalDepenses,
-    benefice: encaissements - totalDepenses,
+    salaires: totalSalaires,
+    benefice: encaissements - totalDepenses - totalSalaires,
     parMoyen: regrouper(
       valides,
       (p) => p.moyen,
@@ -521,7 +525,20 @@ export function useRapport(
             .range(d, f),
         ),
       ]);
-      return calculerRapport(depots, lignes, paiements, depenses, jours, libelleMoyen);
+      // Salaires payés sur la période (visibles par le propriétaire seulement).
+      const salaires = (
+        await lireTout<{ net: number; employes: { boutique_id: string | null } | null }>((d, f) =>
+          db
+            .from("salaires")
+            .select("net, employes(boutique_id)")
+            .not("paye_le", "is", null)
+            .gte("paye_le", b.debutDate)
+            .lt("paye_le", b.finDate)
+            .order("id")
+            .range(d, f),
+        )
+      ).filter((x) => !x.employes?.boutique_id || boutiqueIds.includes(x.employes.boutique_id));
+      return calculerRapport(depots, lignes, paiements, depenses, jours, libelleMoyen, salaires);
     },
   });
 }

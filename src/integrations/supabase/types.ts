@@ -2356,6 +2356,16 @@ export type Database = {
       }
     }
     Functions: {
+      ajouter_membre: {
+        Args: {
+          p_boutique_ids?: string[]
+          p_email: string
+          p_plafond?: number
+          p_pressing: string
+          p_role: Database["public"]["Enums"]["role_membre"]
+        }
+        Returns: string
+      }
       caisse_theorique: { Args: { p_session: string }; Returns: number }
       can_access: {
         Args: { p_boutique: string; p_pressing: string }
@@ -2408,6 +2418,7 @@ export type Database = {
         }
         Returns: string
       }
+      etat_pointage: { Args: { p_pressing: string }; Returns: Json }
       has_role: {
         Args: {
           p_pressing: string
@@ -2421,6 +2432,34 @@ export type Database = {
         Args: { p_pressing: string }
         Returns: Database["public"]["Enums"]["role_membre"]
       }
+      payer_salaire: {
+        Args: {
+          p_moyen: Database["public"]["Enums"]["moyen_paiement"]
+          p_salaire: string
+        }
+        Returns: {
+          avances: number
+          base: number
+          created_at: string
+          employe_id: string
+          id: string
+          mois: string
+          moyen: Database["public"]["Enums"]["moyen_paiement"] | null
+          net: number | null
+          paye_le: string | null
+          pressing_id: string
+          primes: number
+          retenues: number
+          updated_at: string
+        }
+        SetofOptions: {
+          from: "*"
+          to: "salaires"
+          isOneToOne: true
+          isSetofReturn: false
+        }
+      }
+      pointer: { Args: { p_pressing: string }; Returns: Json }
     }
     Enums: {
       canal_message: "whatsapp" | "sms"

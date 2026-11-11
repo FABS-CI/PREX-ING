@@ -9,3 +9,9 @@
 - [x] Appliquer le SQL fourni à l’identique et vérifier le stockage des reçus.
 - [x] Vérifier les 30 tests et l’absence d’erreurs signalées.
 - [x] Enregistrer une dépense en espèces de 2 500 FCFA et vérifier la baisse de caisse de 5 000 à 2 500 FCFA.
+
+## Équipe et salaires
+- [x] Importer les dix fichiers à l’identique et supprimer l’archive.
+- [ ] Appliquer le SQL fourni à l’identique et régénérer les types.
+- [ ] Vérifier les 34 tests et les erreurs signalées.
+- [ ] Créer Test Salaire, marquer une absence, ajouter 10 000 FCFA d’avance et 5 000 FCFA de prime ; vérifier 52 692 FCFA nets enregistrés.
