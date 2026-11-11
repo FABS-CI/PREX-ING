@@ -629,16 +629,19 @@ export type Database = {
         Row: {
           article_id: string | null
           boutique_id: string
+          couvert_abonnement: boolean
           created_at: string
           deleted_at: string | null
           depot_id: string
           etiquette: string | null
+          forfait_id: string | null
           id: string
           libelle: string
           observations: string | null
           photo_url: string | null
           poids_kg: number | null
           pressing_id: string
+          prix_lot: number | null
           prix_unitaire: number
           quantite: number
           service_id: string | null
@@ -649,16 +652,19 @@ export type Database = {
         Insert: {
           article_id?: string | null
           boutique_id: string
+          couvert_abonnement?: boolean
           created_at?: string
           deleted_at?: string | null
           depot_id: string
           etiquette?: string | null
+          forfait_id?: string | null
           id?: string
           libelle: string
           observations?: string | null
           photo_url?: string | null
           poids_kg?: number | null
           pressing_id: string
+          prix_lot?: number | null
           prix_unitaire?: number
           quantite?: number
           service_id?: string | null
@@ -669,16 +675,19 @@ export type Database = {
         Update: {
           article_id?: string | null
           boutique_id?: string
+          couvert_abonnement?: boolean
           created_at?: string
           deleted_at?: string | null
           depot_id?: string
           etiquette?: string | null
+          forfait_id?: string | null
           id?: string
           libelle?: string
           observations?: string | null
           photo_url?: string | null
           poids_kg?: number | null
           pressing_id?: string
+          prix_lot?: number | null
           prix_unitaire?: number
           quantite?: number
           service_id?: string | null
@@ -713,6 +722,13 @@ export type Database = {
             columns: ["depot_id"]
             isOneToOne: false
             referencedRelation: "v_depots_en_retard"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "depot_lignes_forfait_id_fkey"
+            columns: ["forfait_id"]
+            isOneToOne: false
+            referencedRelation: "forfaits"
             referencedColumns: ["id"]
           },
           {
@@ -2378,6 +2394,10 @@ export type Database = {
           isOneToOne: true
           isSetofReturn: false
         }
+      }
+      consommer_abonnement: {
+        Args: { p_abonnement: string; p_pieces: number }
+        Returns: number
       }
       creer_pressing: {
         Args: {
